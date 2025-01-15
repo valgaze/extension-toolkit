@@ -1,0 +1,17 @@
+.github/
+node_modules
+.DS_STORE
+deploy/
+.env
+abc.ts
+.vitepress/cache
+docs/.vitepress/cache/*
+coverage/
+todo.md
+message_log.txt
+changelog.md
+*storybook.log
+scribbler/
+dist
+.env
+storybook-static/

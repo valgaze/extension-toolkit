@@ -15,7 +15,7 @@ export const FormExtension: RenderExtension<ExtensionPayload> = {
     // Create shadow root
     const shadow = element.attachShadow({ mode: "open" });
     const container = document.createElement("div");
-    console.log(element.voiceflow);
+
     // Add styles to shadow DOM
     const styleElement = document.createElement("style");
     styleElement.textContent = styles;

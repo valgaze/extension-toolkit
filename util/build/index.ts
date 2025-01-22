@@ -1,7 +1,7 @@
 // Helpers for build process
 
 export const checkProjectId = (VOICEFLOW_PROJECT_ID: string) => {
-  if (!VOICEFLOW_PROJECT_ID || VOICEFLOW_PROJECT_ID === "__REPLACE__ME__") {
+  if (!VOICEFLOW_PROJECT_ID || VOICEFLOW_PROJECT_ID === "__PLACEHOLDER__") {
     console.error(
       "⚠️ Oops! Something went wrong during the build\n" +
         "1️⃣ Copy the `.env.example` file to `.env`\n" +

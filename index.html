@@ -26,7 +26,7 @@
       const PROJECT_ID = import.meta.env.VITE_VOICEFLOW_PROJECT_ID;
       const ENV = import.meta.env.NODE_ENV;
 
-      if (PROJECT_ID === "__PLACEHOLDER__") {
+      if (!PROJECT_ID || PROJECT_ID === "__PLACEHOLDER__") {
         showSetupMessage();
         throw new Error("Add your PROJECT_ID to continue");
       }
@@ -85,7 +85,7 @@
           <div style="background: #ff5252; color: white; padding: 20px; border-radius: 8px; margin: 20px; text-align: center;">
             <h2>👋 Getting setup with Voiceflow Extensions!</h2>
             <p>To see your project, just add your project ID above where it says "__PLACEHOLDER__" on the source of this page</p>
-            <p><a href="https://github.com/valgaze/extension-toolkit/README.md#setup"
+            <p><a href="hhttps://github.com/valgaze/extension-toolkit/blob/main/README.md#setup"
                   style="color: white; text-decoration: underline;"
                   target="_blank">
               📚 Click here for setup guide

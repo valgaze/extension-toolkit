@@ -8,7 +8,7 @@ import {
   RenderMode,
 } from "@voiceflow/react-chat";
 
-export const VF_ICON = "https://speedybot.js.org/sb_logo.svg";
+export const CHAT_ICON = "https://speedybot.js.org/sb_logo.svg";
 
 export const ChatWrapper = ({ children }) => {
   const contextValue = {
@@ -41,7 +41,7 @@ export const SystemResponseTemplate = ({
   <SystemResponse
     {...args}
     messages={messages as any}
-    avatar={VF_ICON}
+    avatar={CHAT_ICON}
     timestamp={Date.now()}
   />
 );

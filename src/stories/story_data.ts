@@ -1,25 +1,6 @@
-type Field = {
-  name: string;
-  type: string;
-  label?: string;
-  placeholder?: string;
-  required?: boolean;
-  options?: string[];
-};
+import type { FormField, ExtensionPayload } from "../extensions/config";
 
-type FormConfig = {
-  title: string;
-  subtitle?: string;
-  fields: Field[];
-  submitText: string;
-  theme?: string;
-};
-
-type FormTemplate = {
-  form: FormConfig;
-  template: string;
-};
-
+// Data payloads for storybook stories (this is JSON you pass down to the extension from voiceflow canvas)
 const forms = {
   contactForm: {
     title: "Contact Us",
@@ -141,8 +122,9 @@ const forms = {
     submitText: "Start My Subscription",
     theme: "light",
   },
-} as const;
+};
 
+// Run directly to get copy/paste'able JSON and voiceflow canvas code to grab these values
 const formTemplates = {
   contactForm: {
     form: forms.contactForm,
@@ -177,7 +159,7 @@ You'll start receiving updates according to your preferences!`,
   },
 } as const;
 
-function generateVoiceflowCode(formTemplate: FormTemplate): string {
+function generateVoiceflowCode(formTemplate): string {
   const { form } = formTemplate;
   const assignments = form.fields
     .map((field) => `${field.name} = last_event.payload.${field.name}`)
@@ -200,5 +182,4 @@ ${form.fields.map((field) => `  ${field.name}`).join(",\n")}
 })`;
 }
 
-// Export everything we need
 export { forms, formTemplates, generateVoiceflowCode };

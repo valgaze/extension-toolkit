@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "setup": "vite ./util/cli.ts",
+    "setup": "node ./util/cli.mjs",
     "dev": "vite --open --config vite.config.ts",
-    "build:extension": "vite build --config vite.config.ts",
+    "build": "echo '📦 To build the library for import: npm run build:extension\n🖥️ To run the example application: npm run serve:example'",
+    "build:extension": "vite build --config ./util/build/vite.config.lib.ts",
     "storybook": "storybook dev -p 6006",
     "serve:example": "echo \"🔧 Building... Please wait.\" && vite build --config ./util/build/vite.config.example_app.ts && echo \"\n\n🚀 Access static prod build at: http://localhost:1337\" && echo \"\n⚠️ Warning: This is a static build. No live-reload or dev features enabled.\" && cd example-bundled && npx serve -l 1337",
     "serve:example:lite": "echo \"🔧 Building... Please wait.\" && vite build --config ./util/build/vite.config.example_lite.ts && echo \"\n\n🚀 Access static prod build at: http://localhost:1337\" && echo \"\n⚠️ Warning: This is a static build. No live-reload or dev features enabled.\" && cd example-bundled && npx serve -l 1337",
@@ -14,8 +15,6 @@
     "dev:no-open": "vite --config vite.config.ts"
   },
   "dependencies": {
-    "chart.xkcd": "^1.1.15",
-    "chart.xkcd-react": "^0.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

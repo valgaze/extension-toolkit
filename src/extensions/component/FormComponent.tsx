@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import type { ExtensionPayload } from "./config";
-import "./MyExtension.css";
+import type { ExtensionPayload } from "./../config";
 
 const FormComponent: React.FC<ExtensionPayload> = ({
   title = "Contact Form",
@@ -32,7 +31,7 @@ const FormComponent: React.FC<ExtensionPayload> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log("formData", typeof formData, { formData });
+    // Could pass this via props too
     window.voiceflow?.chat?.interact({
       type: "complete",
       payload: formData,
@@ -44,7 +43,6 @@ const FormComponent: React.FC<ExtensionPayload> = ({
       <div className={`form-ext-container ${theme}`}>
         {title && <h2 className="form-ext-title">{title}</h2>}
         {subtitle && <p className="form-ext-subtitle">{subtitle}</p>}
-
         <form onSubmit={handleSubmit} className="form-ext">
           {fields.map((field) => (
             <div key={field.name} className="form-ext-field">

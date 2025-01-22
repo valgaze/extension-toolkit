@@ -2,6 +2,8 @@
 
 Build powerful, type-safe extensions for Voiceflow chat widgets using your favorite framework (React, Vue, Svelte, vanilla JS, etc) and have fun while doing it
 
+[![Get Started](https://img.shields.io/badge/🚀_Get_Started-Guide-7B68EE?style=for-the-badge&logoColor=white)](#setup)
+
 ## Why Use This Kit
 
 - 🔥 **Rapid Development**: Hot reloading and real-time testing in Storybook + V1 Voiceflow widget
@@ -9,6 +11,7 @@ Build powerful, type-safe extensions for Voiceflow chat widgets using your favor
 - 🧪 **Easy Testing**: Test your extensions in isolation or with live Voiceflow widget
 - 🛠️ **Developer Tools**: Built-in debugging and development utilities
 - 🔐 **Security First**: Controlled dependency management and secure builds
+- 🌟 **Conversation Design**: Build natural, intuitive experiences by collaborating with conversation designers to create extensions that seamlessly integrate into chat flows
 
 ## Why This Kit Exists
 
@@ -29,13 +32,20 @@ If you've never written code before untick the "I'm New to Coding" box below, ot
 <details>
 <summary>🐣 "I'm New to Coding"</summary>
 
-You'll need to install NodeJS or a compatible toolchain (ex like **[bun](https://bun.sh/)**) on your machine to build extensions with this toolkit for voiceflow. You'll also need to get "git" installed on your computer.
+## 0) Get the tools you'll need
+
+You'll need two tools to get started building Voiceflow extensions on your machine:
+
+- **Node.js**
+- **Git**
+
+Entering the commands below will require you to have a terminal open. If you're not sure how to open a terminal or where to start, see this guide for the basics: https://support.apple.com/guide/terminal/welcome/mac
 
 ### Setup Node on Your Computer
 
-Node is a popular tool for running Typescript/JavaScript on web servers. Today, you'll use it to activate your bot—it will handle all the details behind the scenes.
+Node is a popular tool for running Typescript/JavaScript on web servers. Today, you'll use it to build your Voiceflow extension
 
-You'll need to install NodeJS on your machine to turn on your bot. There are many ways to do that, but two easy ways:
+You'll need to install NodeJS on your machine to run your extension in a Voiceflow widget. There are many ways to do that, but two easy ways:
 
 **Option 1** Download + install Node from the official site: **[https://nodejs.org/en/download](https://nodejs.org/en/download)**
 
@@ -49,7 +59,7 @@ curl https://get.volta.sh | bash
 volta install node
 ```
 
-If you can run `node --version` in your terminal, you're good to go!
+Once you can run `node --version` in your terminal, you're good to go!
 
 ## Setup Git on Your Computer
 
@@ -65,11 +75,15 @@ Long story short, if you can run `git --version` in your terminal, you're good t
 
 ## 1) Fetch repo & install deps
 
+If you're comfortable with Git, run:
+
 ```
 git clone https://github.com/valgaze/extension-toolkit
-cd extension-kit
+cd extension-toolkit
 npm install
 ```
+
+Or follow the "I'm New to Coding" instructions above ☝️
 
 This might take a few minutes to complete, so while you're waiting, let's get your Voiceflow project ready
 
@@ -129,7 +143,7 @@ npm run storybook
 
 - This will start **[Storybook](https://storybook.js.org/)** and open a new browser window at `http://localhost:6006`
 
-- Storybook is you develop your extensions in isolation, and see if your extension submits data to the Voiceflow canvas as you expect. You can create many different "stories" to test different scenarios to make your extension more robust.
+- Storybook lets you build and test your extensions in a sandbox environment. You can create different scenarios ("stories") to validate your extension's behavior, collaborate with team members, and ensure everything works perfectly before integrating with the chat widget. It's like a playground where you can experiment and fine-tune your extension without worrying (yet!) about the details of a large conversation system
 
 ![Storybook](./assets/storybook.gif)
 
@@ -143,9 +157,11 @@ npm run dev
 
 - This will start the live widget and open a new browser window at `http://localhost:5173?autoload=true`
 
-- The live widget is where you'll test your extension in the actual Voiceflow chat widget and change code and see the changes instantly.
+- The live widget is where you'll test your extension in the actual Voiceflow chat widget in conversation flows, make changes to the code and see the changes instantly.
 
 - You can also test different scenarios and see if your extension submits data to the Voiceflow canvas as you expect.
+
+- **Note:** If you're using the live widget, you'll need to click "Run" in the Voiceflow canvas to see the changes in the live widget
 
 ![Live Widget](./assets/live_widget.gif)
 

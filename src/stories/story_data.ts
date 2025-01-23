@@ -1,7 +1,7 @@
 import type { FormField, ExtensionPayload } from "../extensions/config";
 
 // Data payloads for storybook stories (this is JSON you pass down to the extension from voiceflow canvas)
-const forms = {
+const forms: Record<string, ExtensionPayload> = {
   contactForm: {
     title: "Contact Us",
     subtitle: "We'll get back to you as soon as possible",

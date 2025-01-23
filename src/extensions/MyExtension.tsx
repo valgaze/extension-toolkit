@@ -15,7 +15,7 @@ export const FormExtension: RenderExtension<ExtensionPayload> = {
     // Create shadow root
     const shadow = element.attachShadow({ mode: "open" });
     const container = document.createElement("div");
-    console.log(element.voiceflow);
+
     // Add styles to shadow DOM
     const styleElement = document.createElement("style");
     styleElement.textContent = styles;
@@ -24,10 +24,20 @@ export const FormExtension: RenderExtension<ExtensionPayload> = {
 
     const root = ReactDOM.createRoot(container);
     const payload = trace.payload;
+
+    // Wrap render in requestAnimationFrame to batch with React's updates
     root.render(<FormComponent {...payload} />);
 
+    // requestAnimationFrame(() => {
+    // });
+
     return () => {
-      root.unmount();
+      requestAnimationFrame(() => {
+        root.unmount();
+        while (shadow.firstChild) {
+          shadow.removeChild(shadow.firstChild);
+        }
+      });
     };
   },
 };

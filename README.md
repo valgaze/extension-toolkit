@@ -34,10 +34,11 @@ If you've never written code before untick the "I'm New to Coding" box below, ot
 
 ## 0) Get the tools you'll need
 
-You'll need two tools to get started building Voiceflow extensions on your machine:
+You'll need three tools to get started building Voiceflow extensions on your machine:
 
 - **Node.js**
 - **Git**
+- **A code editor**
 
 Entering the commands below will require you to have a terminal open. If you're not sure how to open a terminal or where to start, see this guide for the basics: https://support.apple.com/guide/terminal/welcome/mac
 
@@ -70,6 +71,8 @@ The easiest way to install Git is to download it from the official site: **[http
 If you're looking for a graphical interface for git, you can download **[GitHub Desktop](https://github.com/apps/desktop)**
 
 Long story short, if you can run `git --version` in your terminal, you're good to go!
+
+You'll also need a code editor. You can use whatever you want, but two good choices are **[VSCode](https://code.visualstudio.com/)** or **[Cursor](https://www.cursor.com/)**
 
 </details>
 

@@ -1,10 +1,35 @@
 // Voiceflow helpers
 
+/**
+ * Configuration interface for Voiceflow Extensions.
+ * Defines the required properties to register and identify an extension
+ * within the Voiceflow platform. This configuration enables proper integration
+ * with the Voiceflow canvas and LLM understanding.
+ */
+export interface ExtensionConfig {
+  /** Unique identifier used to invoke this extension from the Voiceflow canvas */
+  id: string;
+  /** Human-readable name for the extension (not used programmatically) */
+  reference_name: string;
+  /** Optional flag to indicate if the extension supports dark mode theming */
+  supports_dark_mode?: boolean;
+  /** Description of the extension's functionality, used by LLMs to understand when to use this extension */
+  description: string;
+}
+
 declare global {
   interface Window {
     voiceflow: {
       chat: {
         interact: (interaction: { type: string; payload: unknown }) => void;
+        open: () => void;
+        close: () => void;
+        load: (options: {
+          verify: { projectID: string };
+          url: string;
+          versionID: string;
+          assistant: { extensions: VoiceflowExtension[] };
+        }) => Promise<void>;
       };
     };
   }
@@ -30,7 +55,7 @@ interface BaseVoiceflowExtension<T = unknown> {
 export interface RenderExtension<T = unknown>
   extends BaseVoiceflowExtension<T> {
   type: "response";
-  render: (props: ExtensionRenderProps<T>) => void;
+  render: (props: ExtensionRenderProps<T>) => void | (() => void);
 }
 
 export interface EffectExtension extends BaseVoiceflowExtension {

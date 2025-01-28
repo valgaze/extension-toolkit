@@ -1,4 +1,4 @@
-import type { FormField, ExtensionPayload } from "../extensions/config";
+import type { FormField, ExtensionPayload } from "./../config.ts";
 
 // Data payloads for storybook stories (this is JSON you pass down to the extension from voiceflow canvas)
 const forms: Record<string, ExtensionPayload> = {

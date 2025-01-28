@@ -1,3 +1,15 @@
+/*
+ * 🎯 FORM EXTENSION EXPORT 🎯
+ * ==========================
+ *
+ * ⚠️ REQUIREMENTS: Export must include:
+ * {
+ *   name: string            - Unique identifier from config
+ *   type: "response"        - Renders form in response to trace
+ *   match: (props) => bool  - Matches trace type/payload name
+ *   render: (props) => void - Renders form in shadow DOM
+ * }
+ */
 import React from "react";
 import ReactDOM from "react-dom/client";
 import type { RenderExtension } from "../../util/types/extension";
@@ -27,9 +39,6 @@ export const FormExtension: RenderExtension<ExtensionPayload> = {
 
     // Wrap render in requestAnimationFrame to batch with React's updates
     root.render(<FormComponent {...payload} />);
-
-    // requestAnimationFrame(() => {
-    // });
 
     return () => {
       requestAnimationFrame(() => {

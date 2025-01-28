@@ -10,5 +10,8 @@
  *      render?: (props) => void,    // for response type
  *      effect?: (props) => void     // for "effect" type
  *    }
+ *
+ * Note: if exporting multiple extensions, each one (ideally) should have a unique export name and id
  */
 export { FormExtension } from "./FormExtension/Extension.tsx";
+export { VideoExtension } from "./VideoExtension/Extension.tsx";

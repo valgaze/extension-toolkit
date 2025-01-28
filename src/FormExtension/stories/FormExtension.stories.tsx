@@ -48,3 +48,10 @@ export const SubscriptionForm = createExtensionStory<ExtensionPayload>(
   forms.subscriptionForm,
   options
 );
+
+export const VideoBuilder = createExtensionStory<ExtensionPayload>(
+  FormExtension,
+  extension_config,
+  forms.VideoBuilder,
+  options
+);

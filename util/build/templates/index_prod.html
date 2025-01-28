@@ -23,8 +23,8 @@
         throw new Error("Add your PROJECT_ID to continue");
       }
      
-      // Import the extension
-      import { __REPLACE__BUNDLE__EXPORT__NAME__ } from './__REPLACE__BUNDLE__NAME__.js';
+      // Import the extension(s)
+      import { __REPLACE__BUNDLE__EXPORT__LIST__ } from './__REPLACE__BUNDLE__NAME__.js';
 
       // Initialize Voiceflow Chat Widget
       // See documentation for deets: https://docs.voiceflow.com/docs/embed-customize-styling#customization-and-configuration
@@ -38,9 +38,9 @@
               url: "https://general-runtime.voiceflow.com",
               versionID: "__REPLACE__BUNDLE__ENVIRONMENT__", // If 'production' you must click  PUBLISH on canvas to get updates, if development you need to press the Run button
               assistant: {
-                extensions: [FormExtension],
+                extensions: [__REPLACE__BUNDLE__EXPORT__LIST__]
               },
-            })     .then(() => {
+            }).then(() => {
               const urlParams = new URLSearchParams(window.location.search);
               const autoload = urlParams.has("autoload"); // Add ?autoload to URL to auto-open chat
 

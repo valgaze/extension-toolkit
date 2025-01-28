@@ -3,18 +3,19 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "setup": "node ./util/cli.mjs",
+    "setup": "node ./util/cli.mjs || bun ./util/cli.mjs",
     "dev": "vite --open --config vite.config.ts",
-    "build": "echo '📦 To build the library for import: npm run build:extension\n🖥️ To run the example application: npm run serve:example'",
+    "build": "echo '📦 Build library: npm run build:extension' && echo '🖥️ Run example app: npm run serve:example'",
     "build:extension": "vite build --config ./util/build/vite.config.lib.ts",
     "storybook": "storybook dev -p 6006",
-    "serve:example": "echo \"🔧 Building... Please wait.\" && vite build --config ./util/build/vite.config.example_app.ts && echo \"\n\n🚀 Access static prod build at: http://localhost:1337\" && echo \"\n⚠️ Warning: This is a static build. No live-reload or dev features enabled.\" && cd example-bundled && npx serve -l 1337",
-    "serve:example:lite": "echo \"🔧 Building... Please wait.\" && vite build --config ./util/build/vite.config.example_lite.ts && echo \"\n\n🚀 Access static prod build at: http://localhost:1337\" && echo \"\n⚠️ Warning: This is a static build. No live-reload or dev features enabled.\" && cd example-bundled && npx serve -l 1337",
+    "serve:example": "echo \"🔧 Building... Please wait.\" && vite build --config ./util/build/vite.config.example_app.ts && echo \"🚀 Access static prod build at: http://localhost:1337\" && echo \"⚠️ Warning: This is a static build. No live-reload or dev features enabled.\" && cd example-bundled && serve -l 1337",
+    "serve:example:lite": "echo \"🔧 Building... Please wait.\" && vite build --config ./util/build/vite.config.example_lite.ts && echo \"🚀 Access static prod build at: http://localhost:1337\" && echo \"⚠️ Warning: This is a static build. No live-reload or dev features enabled.\" && cd example-bundled && npx serve -l 1337",
     "build:extension:lite": "vite build --config vite.config.example_lite.ts",
     "build-storybook": "storybook build",
     "dev:no-open": "vite --config vite.config.ts"
   },
   "dependencies": {
+    "picocolors": "^1.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -28,6 +29,7 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "serve": "^14.2.4",
     "storybook": "^8.4.7",
     "typescript": "^5.0.0",
     "vite": "^6.0.7",

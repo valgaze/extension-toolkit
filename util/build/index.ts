@@ -17,7 +17,7 @@ export const checkProjectId = (VOICEFLOW_PROJECT_ID: string) => {
 type ReplaceTemplateOptions = {
   voiceflow_project_id: string;
   filename: string;
-  extensionName: string;
+  exports_list: string;
   mode: string; // "development" | "production";
 };
 
@@ -35,13 +35,14 @@ export const decorateTemplate = ({
   const REPLACE_TOKENS = {
     PROJECT_ID: "__REPLACE__PROJECT_ID__",
     BUNDLE_FILENAME: "__REPLACE__BUNDLE__NAME__.js",
-    BUNDLE_EXPORT_NAME: "__REPLACE__BUNDLE__EXPORT__NAME__",
+    BUNDLE_EXPORT_LIST: "__REPLACE__BUNDLE__EXPORT__LIST__",
     BUNDLE_ENVIRONMENT: "__REPLACE__BUNDLE__ENVIRONMENT__",
   };
   const modified = template
     .replace(REPLACE_TOKENS.PROJECT_ID, options.voiceflow_project_id)
     .replace(REPLACE_TOKENS.BUNDLE_FILENAME, options.filename)
-    .replace(REPLACE_TOKENS.BUNDLE_EXPORT_NAME, options.extensionName)
+    .replace(REPLACE_TOKENS.BUNDLE_EXPORT_LIST, options.exports_list)
+    .replace(REPLACE_TOKENS.BUNDLE_EXPORT_LIST, options.exports_list)
     .replace(REPLACE_TOKENS.BUNDLE_ENVIRONMENT, options.mode)
     .replace(REPLACE_TOKENS.BUNDLE_ENVIRONMENT, options.mode);
 

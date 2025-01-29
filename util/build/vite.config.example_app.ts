@@ -28,12 +28,7 @@ export default defineConfig(({ mode }) => {
       outDir: path.resolve(__dirname, "..", "..", "example-bundled"),
       minify: true,
       lib: {
-        entry: path.resolve(
-          __dirname,
-          "..",
-          "..",
-          "src/extensions/MyExtension.tsx"
-        ),
+        entry: path.resolve(__dirname, "..", "..", "src/index.tsx"),
         formats: ["es"],
         fileName: "bundled", // "bundled.js"
       },
@@ -49,7 +44,7 @@ export default defineConfig(({ mode }) => {
         name: "generate-index",
         async writeBundle(options, bundle) {
           const dist_output_file_name = "bundled.js"; // const [dist_output_file_name] = Object.keys(bundle);
-          const [extensionName] = bundle[dist_output_file_name]["exports"];
+          const exports_list = bundle[dist_output_file_name]["exports"];
 
           try {
             // Read in template
@@ -65,7 +60,7 @@ export default defineConfig(({ mode }) => {
               options: {
                 voiceflow_project_id: VOICEFLOW_PROJECT_ID,
                 filename: dist_output_file_name,
-                extensionName,
+                exports_list,
                 mode,
               },
             });

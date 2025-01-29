@@ -1,16 +1,16 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  createExtensionStory,
-  createChatWidgetStory,
-} from "../../util/storybook/index.tsx";
+import { createExtensionStory } from "../../../util/storybook/index.tsx";
+
+// Story data
 import { forms } from "./story_data.ts";
 
 // Extension
-import { FormExtension } from "../extensions/MyExtension.tsx";
-import { extension_config } from "../extensions/config.ts";
-import type { ExtensionPayload } from "../extensions/config.ts";
-import type { RenderExtension } from "../../util/types/extension.ts";
+import { FormExtension } from "../Extension.tsx";
+// Extension Config
+
+import { extension_config } from "../config.ts";
+import type { ExtensionPayload } from "../config.ts";
 
 // Meta
 const meta: Meta<typeof HTMLDivElement> = {
@@ -28,6 +28,8 @@ const options = {
     width: "550px",
   },
 };
+
+// Build stories
 export const ContactForm = createExtensionStory<ExtensionPayload>(
   FormExtension,
   extension_config,
@@ -44,5 +46,12 @@ export const SubscriptionForm = createExtensionStory<ExtensionPayload>(
   FormExtension,
   extension_config,
   forms.subscriptionForm,
+  options
+);
+
+export const VideoBuilder = createExtensionStory<ExtensionPayload>(
+  FormExtension,
+  extension_config,
+  forms.VideoBuilder,
   options
 );

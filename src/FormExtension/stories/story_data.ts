@@ -1,4 +1,4 @@
-import type { FormField, ExtensionPayload } from "../extensions/config";
+import type { FormField, ExtensionPayload } from "./../config.ts";
 
 // Data payloads for storybook stories (this is JSON you pass down to the extension from voiceflow canvas)
 const forms: Record<string, ExtensionPayload> = {
@@ -121,6 +121,39 @@ const forms: Record<string, ExtensionPayload> = {
     ],
     submitText: "Start My Subscription",
     theme: "light",
+  },
+  VideoBuilder: {
+    title: "Configure Video Player",
+    subtitle: "Customize how your video will be displayed",
+    fields: [
+      {
+        name: "url",
+        type: "text",
+        label: "YouTube Video URL",
+        placeholder: "https://www.youtube.com/watch?v=...",
+        required: true,
+      },
+      {
+        name: "playback_options",
+        type: "checkbox",
+        label: "Playback Settings",
+        options: ["Autoplay", "Show Controls", "Muted", "Loop Video"],
+        required: true,
+      },
+      {
+        name: "start_time",
+        type: "text",
+        label: "Start Time (optional)",
+        placeholder: "1m30s or 90s",
+      },
+      {
+        name: "custom_title",
+        type: "text",
+        label: "Video Title (optional)",
+        placeholder: "Enter a custom title for the video",
+      },
+    ],
+    submitText: "Create Video Player",
   },
 };
 

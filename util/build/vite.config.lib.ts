@@ -10,12 +10,7 @@ export default defineConfig(({ mode }) => {
 
   checkProjectId(VOICEFLOW_PROJECT_ID);
 
-  const extensionPath = path.resolve(
-    process.cwd(),
-    "src",
-    "extensions",
-    "MyExtension.tsx"
-  );
+  const extensionEntryPoint = path.resolve(process.cwd(), "src", "index.tsx");
   return {
     // 🙃 Trick per https://vite.dev/guide/build#library-mode
     // React has old-school process.env.NODE_ENV check, Vite when not in library mode is much cleaner
@@ -25,7 +20,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       lib: {
-        entry: extensionPath,
+        entry: extensionEntryPoint,
         formats: ["es"],
         fileName: "bundled",
       },

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import type { ExtensionPayload } from "./../config";
 
 const FormComponent: React.FC<ExtensionPayload> = ({
-  title = "Contact Form",
+  title = "",
   subtitle,
   fields = [],
   submitText = "Submit",

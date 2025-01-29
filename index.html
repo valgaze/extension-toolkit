@@ -22,77 +22,81 @@
   <body>
     <div id="flat-chat"></div>
     <script type="module">
-      import { FormExtension } from "./src/extensions/MyExtension.tsx";
-      const PROJECT_ID = import.meta.env.VITE_VOICEFLOW_PROJECT_ID;
-      const ENV = import.meta.env.NODE_ENV;
+      (async () => {
+        const extensionsModule = await import("./src/index.tsx");
+        const extensions = Object.values(extensionsModule); // Trick to get all exported extensions
 
-      if (!PROJECT_ID || PROJECT_ID === "__PLACEHOLDER__") {
-        showSetupMessage();
-        throw new Error("Add your PROJECT_ID to continue");
-      }
+        const PROJECT_ID = import.meta.env.VITE_VOICEFLOW_PROJECT_ID;
+        const ENV = import.meta.env.NODE_ENV;
 
-      const isProduction = ENV === "production";
-      const runtimeURL = "https://general-runtime.voiceflow.com";
+        if (!PROJECT_ID || PROJECT_ID === "__PLACEHOLDER__") {
+          showSetupMessage();
+          throw new Error("Add your PROJECT_ID to continue");
+        }
 
-      (function (d, t) {
-        const script = d.createElement(t);
-        const s = d.getElementsByTagName(t)[0];
+        const isProduction = ENV === "production";
+        const runtimeURL = "https://general-runtime.voiceflow.com";
 
-        script.onload = function () {
-          window.voiceflow.chat
-            .load({
-              verify: { projectID: PROJECT_ID },
-              url: runtimeURL,
-              versionID: isProduction ? "production" : "development",
-              assistant: {
-                extensions: [FormExtension],
-              },
-            })
-            .then(() => {
-              const urlParams = new URLSearchParams(window.location.search);
-              const autoload = urlParams.has("autoload"); // Add ?autoload to URL to auto-open chat
+        (function (d, t) {
+          const script = d.createElement(t);
+          const s = d.getElementsByTagName(t)[0];
 
-              if (autoload) {
-                window.voiceflow.chat.open();
-              } else if (!isProduction) {
-                window.voiceflow.chat.proactive.push(
-                  {
-                    type: "text",
-                    payload: {
-                      message: "⚙️ You're in the development environment!",
+          script.onload = function () {
+            window.voiceflow.chat
+              .load({
+                verify: { projectID: PROJECT_ID },
+                url: runtimeURL,
+                versionID: isProduction ? "production" : "development",
+                assistant: {
+                  extensions, // Use dynamically imported extensions
+                },
+              })
+              .then(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const autoload = urlParams.has("autoload");
+
+                if (autoload) {
+                  window.voiceflow.chat.open();
+                } else if (!isProduction) {
+                  window.voiceflow.chat.proactive.push(
+                    {
+                      type: "text",
+                      payload: {
+                        message: "⚙️ You're in the development environment!",
+                      },
                     },
-                  },
-                  {
-                    type: "text",
-                    payload: {
-                      message: `💡 Tap the icon below to interact with your agent (make sure to'too the "Run" button on the voiceflow canvas to update the conversation flow)`,
-                    },
-                  }
-                );
-              }
-            })
-            .catch((error) => {
-              console.error("Error loading Voiceflow chat:", error);
-            });
-        };
-        script.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
-        script.type = "text/javascript";
-        s.parentNode.insertBefore(script, s);
-      })(document, "script");
+                    {
+                      type: "text",
+                      payload: {
+                        message: `💡 Tap the icon below to interact with your agent (make sure to'too the "Run" button on the voiceflow canvas to update the conversation flow)`,
+                      },
+                    }
+                  );
+                }
+              })
+              .catch((error) => {
+                console.error("Error loading Voiceflow chat:", error);
+              });
+          };
+          script.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
+          script.type = "text/javascript";
+          s.parentNode.insertBefore(script, s);
+        })(document, "script");
 
-      function showSetupMessage() {
-        document.getElementById("app").innerHTML = `
-          <div style="background: #ff5252; color: white; padding: 20px; border-radius: 8px; margin: 20px; text-align: center;">
-            <h2>👋 Getting setup with Voiceflow Extensions!</h2>
-            <p>To see your project, just add your project ID above where it says "__PLACEHOLDER__" on the source of this page</p>
-            <p><a href="hhttps://github.com/valgaze/extension-toolkit/blob/main/README.md#setup"
-                  style="color: white; text-decoration: underline;"
-                  target="_blank">
-              📚 Click here for setup guide
-            </a></p>
-          </div>
-        `;
-      }
+        function showSetupMessage() {
+          document.getElementById("app").innerHTML = `
+      <div style="background: #ff5252; color: white; padding: 20px; border-radius: 8px; margin: 20px; text-align: center;">
+        <h2>👋 Getting setup with Voiceflow Extensions!</h2>
+        <p>To see your project, just add your project ID above where it says "__PLACEHOLDER__" on the source of this page</p>
+        <p><a href="https://github.com/valgaze/extension-toolkit/blob/main/README.md#setup"
+              style="color: white; text-decoration: underline;"
+              target="_blank">
+          📚 Click here for setup guide
+        </a></p>
+      </div>
+    `;
+        }
+      })();
     </script>
   </body>
 </html>

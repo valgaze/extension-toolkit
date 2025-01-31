@@ -188,16 +188,80 @@ npm run serve:example
 
 ![Voiceflow Publish](./assets/publish.png)
 
+<details>
+<summary>🛠️ Note: If you want to build a CDN-compatible extension, you can run the following command</summary>
+
+```sh
+npm run build:extension:cdn
+```
+
+This will output a `bundled_cdn.js` file in the `example-bundled` directory and an index.html which consumes the.
+
+In short, you have two ways to build and deploy your extension:
+
+#### 1. Standard Build (`npm run build:extension`)
+
+- Outputs a module-based bundle
+- Best for modern web applications
+- Supports tree-shaking and optimized imports
+- Use when you have control over the hosting environment
+
+#### 2. CDN Build (`npm run build:extension:cdn`)
+
+- Creates a globally accessible bundle that works via CDN
+- Perfect for direct script inclusion in HTML
+- Makes your extension available through `window.VoiceflowExtensions`
+- Ideal when you need to:
+  - Host your extension on a CDN
+  - Include the extension directly in HTML via `<script>` tags
+  - Support legacy systems or simpler integration scenarios
+
+Example of using the CDN build:
+
+```html
+<!-- Load the extension(s) from your CDN -->
+<script src="https://your-cdn.com/voiceflow-extension.js"></script>
+
+<script type="module">
+  // Import the extension(s) off window.VoiceflowExtensions
+  const { FormExtension, VideoExtension } = window.VoiceflowExtensions;
+
+  // Initialize Voiceflow Chat Widget
+  // See documentation for deets: https://docs.voiceflow.com/docs/embed-customize-styling#customization-and-configuration
+  (function (d, t) {
+    var v = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    v.onload = function () {
+      window.voiceflow.chat.load({
+        verify: { projectID: "project_id_here" },
+        url: "https://general-runtime.voiceflow.com",
+        versionID: "production", // If 'production' you must click  PUBLISH on canvas to get updates, if development you need to press the Run button
+        assistant: {
+          extensions: [FormExtension, VideoExtension],
+        },
+      });
+    };
+    v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
+    v.type = "text/javascript";
+    s.parentNode.insertBefore(v, s);
+  })(document, "script");
+</script>
+```
+
+</details>
+
 ## Development Workflow
 
 ### Available Scripts
 
-| Command                   | Description                                                         |
-| ------------------------- | ------------------------------------------------------------------- |
-| `npm run storybook`       | Start Storybook development environment w/ HMR (port 6006)          |
-| `npm run dev`             | Run extension in live Voiceflow widget with live-reload (port 5173) |
-| `npm run build:extension` | Build production-ready extension bundle                             |
-| `npm run serve:example`   | Build and serve example with bundled extension                      |
+| Command                       | Description                                                         |
+| ----------------------------- | ------------------------------------------------------------------- |
+| `npm run storybook`           | Start Storybook development environment w/ HMR (port 6006)          |
+| `npm run dev`                 | Run extension in live Voiceflow widget with live-reload (port 5173) |
+| `npm run build:extension`     | Build production-ready extension bundle                             |
+| `npm run build:extension:cdn` | Build production-ready CDN-compatible extension bundle              |
+| `npm run serve:example`       | Build and serve example with bundled extension                      |
+| `npm run serve:example:cdn`   | Build and serve example with CDN-compatible bundled extension       |
 
 ### Development Process
 

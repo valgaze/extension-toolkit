@@ -2,25 +2,30 @@
 <html>
   <head>
     <title>[%MODE%] Voiceflow Extensions</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <style>
       body {
         background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
       }
-      #flat-chat {
-        width: 100vw;
-        height: 100vh;
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-      /* Add styles for Voiceflow chat window */
       :root {
-        --vf-chat-width: 450px !important; /* Default is usually 380px */
+        --vf-chat-width: min(95vw, 450px) !important;
+      }
+
+      @media (max-width: 480px) {
+        :root {
+          --vf-chat-width: 100vw !important;
+          --vf-chat-border-radius: 0 !important;
+          --vf-chat-margin: 0 !important;
+        }
       }
     </style>
   </head>
   <body>
-    <div id="flat-chat"></div>
     <script type="module">
       (async () => {
         const extensionsModule = await import("./src/index.tsx");

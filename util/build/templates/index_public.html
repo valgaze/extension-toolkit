@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+      <!-- 
+      👋 WELCOME! 
+      Need help? Visit: https://github.com/valgaze/extension-toolkit/blob/main/README.md#setup
+      
+      🔔 Note: This is the static PRODUCTION version where you import a bundled extension file- use npm run dev or npm run storybook for development with live-reload and other nice things
+    -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🚀 Voiceflow Extensions</title>
+    <div id="app"></div>
+
+    <a href="./storybook.html" style="display: block; text-align: center; padding: 20px; font-size: 24px; text-decoration: none; color: #007bff; font-weight: bold; margin: 20px 0;">
+      📚 Check out the Storybook! ✨
+    </a>
+
+    <h1>Voiceflow Project Environment: __REPLACE__BUNDLE__ENVIRONMENT__</h1>
+
+    <!-- Load your extensions -->
+    <script type="module">
+      // 👉 Add your Voiceflow project ID here
+      const PROJECT_ID = '__REPLACE__PROJECT_ID__';
+
+      if (PROJECT_ID === "__PLACEHOLDER__" || !PROJECT_ID) {
+        throw new Error("Add your PROJECT_ID to continue");
+      }
+     
+      // Import the extension(s)
+      import { __REPLACE__BUNDLE__EXPORT__LIST__ } from './__REPLACE__BUNDLE__NAME__.js';
+
+      // Initialize Voiceflow Chat Widget
+      // See documentation for deets: https://docs.voiceflow.com/docs/embed-customize-styling#customization-and-configuration
+      (function (d, t) {
+        var v = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+        v.onload = function () {
+          window.voiceflow.chat
+            .load({
+              verify: { projectID: PROJECT_ID },
+              url: "https://general-runtime.voiceflow.com",
+              versionID: "__REPLACE__BUNDLE__ENVIRONMENT__", // If 'production' you must click  PUBLISH on canvas to get updates, if development you need to press the Run button
+              assistant: {
+                extensions: [__REPLACE__BUNDLE__EXPORT__LIST__]
+              },
+            }).then(() => {
+              const urlParams = new URLSearchParams(window.location.search);
+              const autoload = urlParams.has("autoload"); // Add ?autoload to URL to auto-open chat
+
+              if (autoload) {
+                window.voiceflow.chat.open();
+              } else {
+                window.voiceflow.chat.proactive.push(
+                  {
+                    type: "text",
+                    payload: {
+                      message: `💡 Tap the icon below to interact with your agent (make sure to press the "Publish" button on the voiceflow canvas to update the conversation flow)`,
+                    },
+                  }
+                );
+              }
+            })
+            .catch((error) => {
+              console.error("Error loading Voiceflow chat:", error);
+            });
+        };
+        v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
+        v.type = "text/javascript";
+        s.parentNode.insertBefore(v, s);
+      })(document, "script");
+    </script>
+  </body>
+</html>

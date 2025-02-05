@@ -254,14 +254,15 @@ Example of using the CDN build:
 
 ### Available Scripts
 
-| Command                       | Description                                                         |
-| ----------------------------- | ------------------------------------------------------------------- |
-| `npm run storybook`           | Start Storybook development environment w/ HMR (port 6006)          |
-| `npm run dev`                 | Run extension in live Voiceflow widget with live-reload (port 5173) |
-| `npm run build:extension`     | Build production-ready extension bundle                             |
-| `npm run build:extension:cdn` | Build production-ready CDN-compatible extension bundle              |
-| `npm run serve:example`       | Build and serve example with bundled extension                      |
-| `npm run serve:example:cdn`   | Build and serve example with CDN-compatible bundled extension       |
+| Command                       | Description                                                                                                                            |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run storybook`           | Start Storybook development environment w/ HMR (port 6006)                                                                             |
+| `npm run dev`                 | Run extension in live Voiceflow widget with live-reload (port 5173)                                                                    |
+| `npm run dev:mobile`          | Run extension in live Voiceflow widget with network IP address exposed so a phone on same network can connect, live-reload (port 5173) |
+| `npm run build:extension`     | Build production-ready extension bundle                                                                                                |
+| `npm run build:extension:cdn` | Build production-ready CDN-compatible extension bundle                                                                                 |
+| `npm run serve:example`       | Build and serve example with bundled extension, output in `example-bundled` directory                                                  |
+| `npm run serve:example:cdn`   | Build and serve example with CDN-compatible bundled extension, output in `example-bundled` directory                                   |
 
 ### Development Process
 
@@ -303,6 +304,8 @@ Below is an example of a custom action node in Voiceflow that uses the extension
 ![Voiceflow Custom Action](./assets/create_action.gif)
 
 **Stop on Action:** When creating an action you can tap the toggle if you want your conversation diagram to "wait" for the extension to send something back before continuing the conversation
+
+Add the extension to **[index.tsx](./src/index.tsx)**
 
 ## Step II: Create a "Javascript step" in Voiceflow
 

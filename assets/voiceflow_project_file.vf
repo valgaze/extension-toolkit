@@ -89,7 +89,7 @@
               "slots": []
             }
           ],
-          "noteID": "241cp10a25",
+          "noteID": "tc1x10n22",
           "description": "Trigger this intent when the user responds affirmatively or agrees to a question or statement using words like \"yes\", \"yea\", \"yup\", \"yep\", \"ya\", \"ok\", \"okay\", \"affirmative\", \"certainly\", or \"sure\"."
         },
         {
@@ -138,7 +138,7 @@
               "slots": []
             }
           ],
-          "noteID": "241cp20avx",
+          "noteID": "tc1x20n8h",
           "description": "Trigger this intent when the user responds negatively or declines something, using words like \"no\", \"nope\", \"nay\", \"nah\", \"not now\", \"no way\", \"no thanks\", \"not\", \"nevermind\", or \"negative\"."
         },
         {
@@ -176,6 +176,75 @@
     },
     "programResources": {
       "messages": {
+        "67a3ac9d16e45a2b5dfdcc51": {
+          "variants": {
+            "default:en-us": [
+              {
+                "data": {
+                  "text": [
+                    {
+                      "children": [
+                        {
+                          "text": "Recording Done"
+                        }
+                      ]
+                    }
+                  ],
+                  "delay": null
+                },
+                "condition": null
+              }
+            ]
+          }
+        },
+        "67a3ac9516e45a2b5dfdcc39": {
+          "variants": {
+            "default:en-us": [
+              {
+                "data": {
+                  "text": [
+                    {
+                      "children": [
+                        {
+                          "text": "Error! "
+                        },
+                        {
+                          "text": "{errorPayload}"
+                        },
+                        {
+                          "text": " "
+                        }
+                      ]
+                    }
+                  ],
+                  "delay": null
+                },
+                "condition": null
+              }
+            ]
+          }
+        },
+        "67a40ae93655f4a208057397": {
+          "variants": {
+            "default:en-us": [
+              {
+                "data": {
+                  "text": [
+                    {
+                      "children": [
+                        {
+                          "text": "Sorry, screen recording in a browser is not supported in mobile devices"
+                        }
+                      ]
+                    }
+                  ],
+                  "delay": null
+                },
+                "condition": null
+              }
+            ]
+          }
+        },
         "66cebe9dea920600071cc1d8": {
           "variants": {
             "default:en-us": [
@@ -762,7 +831,10 @@
           "6787ce8bfd2d6f775a522a6c",
           "6787d176d85e858e57c0bef8",
           "67909c7da3a14c8742fb6b7a",
-          "6799c8fd99ee09ab4a4cfb53"
+          "6799c8fd99ee09ab4a4cfb53",
+          "67a3ac9516e45a2b5dfdcc39",
+          "67a3ac9d16e45a2b5dfdcc51",
+          "67a40ae93655f4a208057397"
         ],
         "slotsMap": {},
         "platform": "webchat",
@@ -781,6 +853,13 @@
         "requiredEntitiesMap": {},
         "eventsMap": {},
         "cmsVariables": {
+          "errorPayload": {
+            "isArray": false,
+            "isSystem": false,
+            "datatype": "any",
+            "description": "Error holder",
+            "defaultValue": null
+          },
           "item": {
             "isArray": false,
             "isSystem": false,
@@ -1071,6 +1150,7 @@
       }
     ],
     "variables": [
+      "errorPayload",
       "item",
       "sessions",
       "user_id",
@@ -1104,7 +1184,7 @@
       "startAt"
     ],
     "_id": "6799a2f4d49283acc8d580ad",
-    "updatedAt": "2025-01-29T07:05:11.404Z",
+    "updatedAt": "2025-02-06T01:10:09.600Z",
     "publishedAt": "2024-09-04T06:46:48.077Z",
     "domains": [
       {
@@ -2053,8 +2133,8 @@
           },
           "nodeID": "66cebea6cee239664f2adf6c",
           "coords": [
-            -1139.7991621272515,
-            -2152.299465024455
+            -1135.1837775118672,
+            -2287.6840804090693
           ]
         },
         "66cebfba142f5f78b5cd7923": {
@@ -2252,26 +2332,26 @@
                     "points": [
                       {
                         "point": [
-                          -1375.34,
-                          -2240.77
+                          -1375.16,
+                          -2240.96
                         ]
                       },
                       {
                         "point": [
-                          -1340.07,
-                          -2240.77
+                          -1337.67,
+                          -2240.96
                         ]
                       },
                       {
                         "point": [
-                          -1340.07,
-                          -2125.3
+                          -1337.67,
+                          -2260.68
                         ]
                       },
                       {
                         "point": [
-                          -1304.8,
-                          -2125.3
+                          -1300.18,
+                          -2260.68
                         ],
                         "allowedToTop": true
                       }
@@ -2342,14 +2422,14 @@
                     "points": [
                       {
                         "point": [
-                          -310.58,
-                          -2454.51
+                          -305.59,
+                          -2420.76
                         ]
                       },
                       {
                         "point": [
-                          67.54,
-                          -2461.62
+                          86.29,
+                          -2419.12
                         ]
                       }
                     ]
@@ -2371,8 +2451,8 @@
           },
           "nodeID": "677dea291654df53ba69a7da",
           "coords": [
-            -476.7666090928572,
-            -2588.9681059969826
+            -471.7666090928572,
+            -2555.2181059969826
           ]
         },
         "677dea411654df53ba69a7e3": {
@@ -2442,19 +2522,19 @@
                     "points": [
                       {
                         "point": [
-                          398.72,
-                          -2355.07
+                          417.47,
+                          -2312.57
                         ]
                       },
                       {
                         "point": [
-                          485.35,
-                          -2355.07
+                          494.73,
+                          -2312.57
                         ]
                       },
                       {
                         "point": [
-                          485.35,
+                          494.73,
                           -2369.47
                         ]
                       },
@@ -2495,8 +2575,8 @@
           },
           "nodeID": "677def9e1654df53ba69a887",
           "coords": [
-            232.54155931335305,
-            -2488.621425690792
+            251.29155931335305,
+            -2446.121425690792
           ]
         },
         "678711bced2e115439c2fd27": {
@@ -2579,8 +2659,8 @@
           },
           "nodeID": "6787ce8b4da8edc40e2a29c0",
           "coords": [
-            -475.98113646953857,
-            -2087.3677941463557
+            -310.26685075525313,
+            -2044.510651289214
           ]
         },
         "6787ce8b4da8edc40e2a29c2": {
@@ -2644,19 +2724,19 @@
                     "points": [
                       {
                         "point": [
-                          -309.8,
-                          -1952.91
+                          -144.08,
+                          -1910.05
                         ]
                       },
                       {
                         "point": [
-                          -121.72,
-                          -1952.91
+                          -38.87,
+                          -1910.05
                         ]
                       },
                       {
                         "point": [
-                          -121.72,
+                          -38.87,
                           -1899
                         ]
                       },
@@ -2761,8 +2841,8 @@
           },
           "nodeID": "6787d11a17678b72f4580db4",
           "coords": [
-            -477.2844672557503,
-            -2326.152079301847
+            -463.43831340959656,
+            -2327.6905408403086
           ]
         },
         "6787d11a17678b72f4580db6": {
@@ -2811,8 +2891,8 @@
                     "points": [
                       {
                         "point": [
-                          -311.1,
-                          -2191.69
+                          -297.26,
+                          -2193.23
                         ]
                       },
                       {
@@ -2935,6 +3015,11 @@
                 "id": "mz8y3fbk",
                 "name": "Video Embeds 📺",
                 "actions": []
+              },
+              {
+                "id": "b66q3epi",
+                "name": "Screen Recorder 📹",
+                "actions": []
               }
             ],
             "intentScope": "GLOBAL",
@@ -2962,26 +3047,26 @@
                     "points": [
                       {
                         "point": [
-                          -973.62,
-                          -1994.35
+                          -969,
+                          -2129.73
                         ]
                       },
                       {
                         "point": [
-                          -807.69,
-                          -1994.35
+                          -802.88,
+                          -2129.73
                         ]
                       },
                       {
                         "point": [
-                          -807.69,
-                          -2561.97
+                          -802.88,
+                          -2528.22
                         ]
                       },
                       {
                         "point": [
-                          -641.77,
-                          -2561.97
+                          -636.77,
+                          -2528.22
                         ],
                         "allowedToTop": true
                       }
@@ -2996,26 +3081,26 @@
                     "points": [
                       {
                         "point": [
-                          -973.62,
-                          -1940.1
+                          -969,
+                          -2075.49
                         ]
                       },
                       {
                         "point": [
-                          -807.95,
-                          -1940.1
+                          -798.72,
+                          -2075.49
                         ]
                       },
                       {
                         "point": [
-                          -807.95,
-                          -2299.15
+                          -798.72,
+                          -2300.69
                         ]
                       },
                       {
                         "point": [
-                          -642.28,
-                          -2299.15
+                          -628.44,
+                          -2300.69
                         ],
                         "allowedToTop": true
                       }
@@ -3030,28 +3115,15 @@
                     "points": [
                       {
                         "point": [
-                          -973.62,
-                          -1886.1
+                          -969,
+                          -2021.49
                         ]
                       },
                       {
                         "point": [
-                          -807.3,
-                          -1886.1
+                          -475.27,
+                          -2017.51
                         ]
-                      },
-                      {
-                        "point": [
-                          -807.3,
-                          -2060.37
-                        ]
-                      },
-                      {
-                        "point": [
-                          -640.98,
-                          -2060.37
-                        ],
-                        "allowedToTop": true
                       }
                     ]
                   }
@@ -3064,15 +3136,28 @@
                     "points": [
                       {
                         "point": [
-                          -973.62,
-                          -1832.1
+                          -969,
+                          -1967.49
+                        ]
+                      },
+                      {
+                        "point": [
+                          -801,
+                          -1967.49
+                        ]
+                      },
+                      {
+                        "point": [
+                          -801,
+                          -1830.99
                         ]
                       },
                       {
                         "point": [
                           -633,
                           -1830.99
-                        ]
+                        ],
+                        "allowedToTop": true
                       }
                     ]
                   }
@@ -3085,15 +3170,15 @@
                     "points": [
                       {
                         "point": [
-                          -1305.98,
-                          -1778.1
+                          -1301.37,
+                          -1913.49
                         ],
                         "reversed": true
                       },
                       {
                         "point": [
                           -1333.25,
-                          -1778.1
+                          -1913.49
                         ]
                       },
                       {
@@ -3106,6 +3191,12 @@
                       }
                     ]
                   }
+                },
+                {
+                  "id": "67a3ac69ff8b858a57a3d17f",
+                  "type": "",
+                  "target": "67a3ac57ff8b858a57a3d179",
+                  "data": {}
                 }
               ]
             }
@@ -3213,26 +3304,26 @@
                     "points": [
                       {
                         "point": [
-                          -1382.11,
-                          -1862.58
+                          -1381.93,
+                          -1862.71
                         ]
                       },
                       {
                         "point": [
-                          -1343.46,
-                          -1862.58
+                          -1341.06,
+                          -1862.71
                         ]
                       },
                       {
                         "point": [
-                          -1343.46,
-                          -2125.3
+                          -1341.06,
+                          -2260.68
                         ]
                       },
                       {
                         "point": [
-                          -1304.8,
-                          -2125.3
+                          -1300.18,
+                          -2260.68
                         ],
                         "allowedToTop": true
                       }
@@ -4186,6 +4277,502 @@
             216.57093174842464,
             -1349.9468140634906
           ]
+        },
+        "67a3ac57ff8b858a57a3d176": {
+          "type": "trace",
+          "data": {
+            "name": "ext_recorder",
+            "_v": 1,
+            "paths": [
+              {
+                "label": "default",
+                "isDefault": true
+              },
+              {
+                "label": "error",
+                "isDefault": false
+              }
+            ],
+            "payload": {
+              "name": "ext_recorder",
+              "body": "{\"title\":\"Record Your Screen\"}",
+              "bodyType": "json",
+              "scope": "local",
+              "isBlocking": true
+            },
+            "defaultPath": 0,
+            "portsV2": {
+              "byKey": {},
+              "builtIn": {},
+              "dynamic": [
+                {
+                  "type": "",
+                  "target": "67a3ac9aff8b858a57a3d18f",
+                  "id": "67a3ac57ff8b858a57a3d177",
+                  "data": {
+                    "points": [
+                      {
+                        "point": [
+                          -312.78,
+                          -2714.07
+                        ]
+                      },
+                      {
+                        "point": [
+                          -205.99,
+                          -2714.07
+                        ]
+                      },
+                      {
+                        "point": [
+                          -205.99,
+                          -3047.35
+                        ]
+                      },
+                      {
+                        "point": [
+                          -99.2,
+                          -3047.35
+                        ],
+                        "allowedToTop": true
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "67a3ac8cff8b858a57a3d182",
+                  "type": "",
+                  "target": "67a3dd01245d8f2edde419ac",
+                  "data": {
+                    "points": [
+                      {
+                        "point": [
+                          -312.78,
+                          -2659.58
+                        ]
+                      },
+                      {
+                        "point": [
+                          -198.12,
+                          -2659.58
+                        ]
+                      },
+                      {
+                        "point": [
+                          -198.12,
+                          -2801.08
+                        ]
+                      },
+                      {
+                        "point": [
+                          -83.46,
+                          -2801.08
+                        ],
+                        "allowedToTop": true
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "nodeID": "67a3ac57ff8b858a57a3d176"
+        },
+        "67a3ac57ff8b858a57a3d179": {
+          "type": "block",
+          "data": {
+            "name": "Recorder",
+            "color": "#CB627B",
+            "steps": [
+              "67a3ac57ff8b858a57a3d176"
+            ]
+          },
+          "nodeID": "67a3ac57ff8b858a57a3d179",
+          "coords": [
+            -478.9622990707942,
+            -2848.5304269231324
+          ]
+        },
+        "67a3ac92ff8b858a57a3d184": {
+          "type": "message",
+          "data": {
+            "name": "",
+            "portsV2": {
+              "byKey": {
+                "next": {
+                  "type": "next",
+                  "target": "67a40b36245d8f2edde419dc",
+                  "id": "67a3ac92ff8b858a57a3d185",
+                  "data": {}
+                }
+              },
+              "builtIn": {},
+              "dynamic": []
+            },
+            "messageID": "67a3ac9516e45a2b5dfdcc39"
+          },
+          "nodeID": "67a3ac92ff8b858a57a3d184"
+        },
+        "67a3ac92ff8b858a57a3d186": {
+          "type": "block",
+          "data": {
+            "name": "Error",
+            "steps": [
+              "67a3ac92ff8b858a57a3d184"
+            ],
+            "color": ""
+          },
+          "nodeID": "67a3ac92ff8b858a57a3d186",
+          "coords": [
+            965.5483571744442,
+            -2596.4996887220386
+          ]
+        },
+        "67a3ac9aff8b858a57a3d18d": {
+          "type": "message",
+          "data": {
+            "name": "",
+            "portsV2": {
+              "byKey": {
+                "next": {
+                  "type": "next",
+                  "target": "67a40a7d245d8f2edde419b8",
+                  "id": "67a3ac9aff8b858a57a3d18e",
+                  "data": {}
+                }
+              },
+              "builtIn": {},
+              "dynamic": []
+            },
+            "messageID": "67a3ac9d16e45a2b5dfdcc51"
+          },
+          "nodeID": "67a3ac9aff8b858a57a3d18d"
+        },
+        "67a3ac9aff8b858a57a3d18f": {
+          "type": "block",
+          "data": {
+            "name": "Success",
+            "steps": [
+              "67a3ac9aff8b858a57a3d18d"
+            ],
+            "color": ""
+          },
+          "nodeID": "67a3ac9aff8b858a57a3d18f",
+          "coords": [
+            65.80188782348264,
+            -3074.3458425681924
+          ]
+        },
+        "67a3dd01245d8f2edde419a9": {
+          "type": "code",
+          "data": {
+            "name": "",
+            "code": "errorPayload = JSON.stringify(last_event.payload)",
+            "paths": [],
+            "portsV2": {
+              "byKey": {},
+              "builtIn": {
+                "next": {
+                  "type": "next",
+                  "target": "67a40ab4245d8f2edde419c1",
+                  "id": "67a3dd01245d8f2edde419aa",
+                  "data": {
+                    "points": [
+                      {
+                        "point": [
+                          247.73,
+                          -2694.53
+                        ]
+                      },
+                      {
+                        "point": [
+                          325.57,
+                          -2693.13
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "fail": {
+                  "type": "fail",
+                  "target": "67a40ab4245d8f2edde419be",
+                  "id": "67a3dd01245d8f2edde419ab",
+                  "data": {
+                    "points": [
+                      {
+                        "point": [
+                          247.73,
+                          -2640.04
+                        ]
+                      },
+                      {
+                        "point": [
+                          324.39,
+                          -2641.31
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              "dynamic": []
+            }
+          },
+          "nodeID": "67a3dd01245d8f2edde419a9"
+        },
+        "67a3dd01245d8f2edde419ac": {
+          "type": "block",
+          "data": {
+            "name": "Parse Submitted Errors",
+            "steps": [
+              "67a3dd01245d8f2edde419a9"
+            ],
+            "color": ""
+          },
+          "nodeID": "67a3dd01245d8f2edde419ac",
+          "coords": [
+            81.54514593709095,
+            -2828.0797152708105
+          ]
+        },
+        "67a40a7d245d8f2edde419b7": {
+          "type": "goToNode",
+          "data": {
+            "name": "",
+            "nodeID": "6787dd5217678b72f4580eb2",
+            "diagramID": "64386e21bb106b044ea34b78",
+            "portsV2": {
+              "byKey": {},
+              "builtIn": {},
+              "dynamic": []
+            }
+          },
+          "nodeID": "67a40a7d245d8f2edde419b7"
+        },
+        "67a40a7d245d8f2edde419b8": {
+          "type": "actions",
+          "data": {
+            "name": "",
+            "steps": [
+              "67a40a7d245d8f2edde419b7"
+            ]
+          },
+          "nodeID": "67a40a7d245d8f2edde419b8",
+          "coords": [
+            0,
+            0
+          ]
+        },
+        "67a40ab4245d8f2edde419be": {
+          "type": "condition-v3",
+          "data": {
+            "name": "",
+            "noMatch": {
+              "path": true,
+              "repromptID": null
+            },
+            "condition": {
+              "type": "logic",
+              "items": [
+                {
+                  "id": "cm6smycxa00wi3b87onra3x5b",
+                  "value": {
+                    "type": "value-variable",
+                    "matchAll": true,
+                    "assertions": [
+                      {
+                        "lhs": {
+                          "variableID": "67a3dd3116e45a2b5dfdfa0b"
+                        },
+                        "rhs": [
+                          {
+                            "text": [
+                              "NO_MOBILE"
+                            ]
+                          }
+                        ],
+                        "key": "cm6smycxa00wj3b87l1ai5ox0",
+                        "operation": "contains"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "portsV2": {
+              "byKey": {
+                "next": {
+                  "type": "next",
+                  "target": null,
+                  "id": "67a40ab4245d8f2edde419bf"
+                },
+                "else": {
+                  "type": "else",
+                  "target": "67a3ac92ff8b858a57a3d186",
+                  "id": "67a40ab4245d8f2edde419c0",
+                  "data": {
+                    "points": [
+                      {
+                        "point": [
+                          656.76,
+                          -2568.41
+                        ]
+                      },
+                      {
+                        "point": [
+                          800.55,
+                          -2569.5
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "cm6smycxa00wi3b87onra3x5b": {
+                  "id": "67a40ac7245d8f2edde419c8",
+                  "target": "67a40ae2245d8f2edde419ce",
+                  "type": "",
+                  "data": {
+                    "points": [
+                      {
+                        "point": [
+                          656.76,
+                          -2631.86
+                        ]
+                      },
+                      {
+                        "point": [
+                          728.72,
+                          -2631.86
+                        ]
+                      },
+                      {
+                        "point": [
+                          728.72,
+                          -2764.6
+                        ]
+                      },
+                      {
+                        "point": [
+                          800.69,
+                          -2764.6
+                        ],
+                        "allowedToTop": true
+                      }
+                    ]
+                  }
+                }
+              },
+              "builtIn": {},
+              "dynamic": []
+            }
+          },
+          "nodeID": "67a40ab4245d8f2edde419be"
+        },
+        "67a40ab4245d8f2edde419c1": {
+          "type": "block",
+          "data": {
+            "name": "Check if mobile device",
+            "steps": [
+              "67a40ab4245d8f2edde419be"
+            ],
+            "color": ""
+          },
+          "nodeID": "67a40ab4245d8f2edde419c1",
+          "coords": [
+            490.574641238512,
+            -2720.1251637572764
+          ]
+        },
+        "67a40ae2245d8f2edde419cc": {
+          "type": "message",
+          "data": {
+            "name": "",
+            "portsV2": {
+              "byKey": {
+                "next": {
+                  "type": "next",
+                  "target": "67a40b29245d8f2edde419d6",
+                  "id": "67a40ae2245d8f2edde419cd",
+                  "data": {}
+                }
+              },
+              "builtIn": {},
+              "dynamic": []
+            },
+            "messageID": "67a40ae93655f4a208057397"
+          },
+          "nodeID": "67a40ae2245d8f2edde419cc"
+        },
+        "67a40ae2245d8f2edde419ce": {
+          "type": "block",
+          "data": {
+            "name": "No Mobile Devices",
+            "steps": [
+              "67a40ae2245d8f2edde419cc"
+            ],
+            "color": ""
+          },
+          "nodeID": "67a40ae2245d8f2edde419ce",
+          "coords": [
+            965.6882978578759,
+            -2791.6024362628777
+          ]
+        },
+        "67a40b29245d8f2edde419d5": {
+          "type": "goToNode",
+          "data": {
+            "name": "",
+            "nodeID": "6787dd5217678b72f4580eb2",
+            "diagramID": "64386e21bb106b044ea34b78",
+            "portsV2": {
+              "byKey": {},
+              "builtIn": {},
+              "dynamic": []
+            }
+          },
+          "nodeID": "67a40b29245d8f2edde419d5"
+        },
+        "67a40b29245d8f2edde419d6": {
+          "type": "actions",
+          "data": {
+            "name": "",
+            "steps": [
+              "67a40b29245d8f2edde419d5"
+            ]
+          },
+          "nodeID": "67a40b29245d8f2edde419d6",
+          "coords": [
+            0,
+            0
+          ]
+        },
+        "67a40b36245d8f2edde419db": {
+          "type": "goToNode",
+          "data": {
+            "name": "",
+            "nodeID": "6787dd5217678b72f4580eb2",
+            "diagramID": "64386e21bb106b044ea34b78",
+            "portsV2": {
+              "byKey": {},
+              "builtIn": {},
+              "dynamic": []
+            }
+          },
+          "nodeID": "67a40b36245d8f2edde419db"
+        },
+        "67a40b36245d8f2edde419dc": {
+          "type": "actions",
+          "data": {
+            "name": "",
+            "steps": [
+              "67a40b36245d8f2edde419db"
+            ]
+          },
+          "nodeID": "67a40b36245d8f2edde419dc",
+          "coords": [
+            0,
+            0
+          ]
         }
       },
       "offsetX": 2347.872941411348,
@@ -4515,6 +5102,39 @@
   "requiredEntities": [],
   "folders": [],
   "responses": [
+    {
+      "id": "67a3ac9d16e45a2b5dfdcc51",
+      "name": "",
+      "createdByID": 85562,
+      "folderID": null,
+      "type": "message",
+      "draft": false,
+      "createdAt": "2025-02-05T18:23:26.000Z",
+      "updatedAt": "2025-02-05T18:23:29.000Z",
+      "updatedByID": 85562
+    },
+    {
+      "id": "67a3ac9516e45a2b5dfdcc39",
+      "name": "",
+      "createdByID": 85562,
+      "folderID": null,
+      "type": "message",
+      "draft": false,
+      "createdAt": "2025-02-05T18:23:18.000Z",
+      "updatedAt": "2025-02-05T18:23:20.000Z",
+      "updatedByID": 85562
+    },
+    {
+      "id": "67a40ae93655f4a208057397",
+      "name": "",
+      "createdByID": 85562,
+      "folderID": null,
+      "type": "message",
+      "draft": false,
+      "createdAt": "2025-02-06T01:05:46.000Z",
+      "updatedAt": "2025-02-06T01:06:15.000Z",
+      "updatedByID": 85562
+    },
     {
       "id": "66d1193205e523c5f6569740",
       "name": "",
@@ -5912,6 +6532,38 @@
       "createdAt": "2025-01-29T03:39:33.000Z"
     },
     {
+      "id": "67a3ac9d16e45a2b5dfdcc53",
+      "discriminatorID": "67a3ac9d16e45a2b5dfdcc52",
+      "text": [
+        {
+          "text": [
+            "Recording Done"
+          ]
+        }
+      ],
+      "condition": null,
+      "delay": null,
+      "createdAt": "2025-02-05T18:23:26.000Z"
+    },
+    {
+      "id": "67a3ac9516e45a2b5dfdcc3b",
+      "discriminatorID": "67a3ac9516e45a2b5dfdcc3a",
+      "text": [
+        {
+          "text": [
+            "Error! ",
+            {
+              "variableID": "67a3dd3116e45a2b5dfdfa0b"
+            },
+            " "
+          ]
+        }
+      ],
+      "condition": null,
+      "delay": null,
+      "createdAt": "2025-02-05T18:23:18.000Z"
+    },
+    {
       "id": "6799c4bcba95d3819c42b2bb",
       "discriminatorID": "6799c4bcba95d3819c42b2ba",
       "text": [
@@ -5982,6 +6634,20 @@
       "condition": null,
       "delay": null,
       "createdAt": "2025-01-29T06:21:49.000Z"
+    },
+    {
+      "id": "67a40ae93655f4a208057399",
+      "discriminatorID": "67a40ae93655f4a208057398",
+      "text": [
+        {
+          "text": [
+            "Sorry, screen recording in a browser is not supported in mobile devices"
+          ]
+        }
+      ],
+      "condition": null,
+      "delay": null,
+      "createdAt": "2025-02-06T01:05:46.000Z"
     }
   ],
   "responseDiscriminators": [
@@ -6460,9 +7126,54 @@
         "6799c8fd99ee09ab4a4cfb55"
       ],
       "createdAt": "2025-01-29T06:21:49.000Z"
+    },
+    {
+      "id": "67a3ac9d16e45a2b5dfdcc52",
+      "channel": "default",
+      "language": "en-us",
+      "responseID": "67a3ac9d16e45a2b5dfdcc51",
+      "variantOrder": [
+        "67a3ac9d16e45a2b5dfdcc53"
+      ],
+      "createdAt": "2025-02-05T18:23:26.000Z"
+    },
+    {
+      "id": "67a3ac9516e45a2b5dfdcc3a",
+      "channel": "default",
+      "language": "en-us",
+      "responseID": "67a3ac9516e45a2b5dfdcc39",
+      "variantOrder": [
+        "67a3ac9516e45a2b5dfdcc3b"
+      ],
+      "createdAt": "2025-02-05T18:23:18.000Z"
+    },
+    {
+      "id": "67a40ae93655f4a208057398",
+      "channel": "default",
+      "language": "en-us",
+      "responseID": "67a40ae93655f4a208057397",
+      "variantOrder": [
+        "67a40ae93655f4a208057399"
+      ],
+      "createdAt": "2025-02-06T01:05:46.000Z"
     }
   ],
   "variables": [
+    {
+      "id": "67a3dd3116e45a2b5dfdfa0b",
+      "name": "errorPayload",
+      "createdByID": 85562,
+      "folderID": null,
+      "color": "#515A63",
+      "isArray": false,
+      "isSystem": false,
+      "datatype": "any",
+      "description": "Error holder",
+      "defaultValue": null,
+      "createdAt": "2025-02-05T21:50:41.000Z",
+      "updatedAt": "2025-02-05T21:50:41.000Z",
+      "updatedByID": 85562
+    },
     {
       "id": "66d14b39490091890e327424",
       "name": "item",
@@ -6941,7 +7652,7 @@
       "assigneeID": null,
       "description": null,
       "createdAt": "2025-01-29T03:39:33.000Z",
-      "updatedAt": "2025-01-29T07:07:48.000Z",
+      "updatedAt": "2025-02-06T01:10:09.000Z",
       "updatedByID": 85562
     }
   ],
@@ -6974,7 +7685,7 @@
       "aiPlayground": true
     },
     "_id": "6799a2f4d49283acc8d580ac",
-    "updatedAt": "2025-01-29T07:07:48.099Z",
+    "updatedAt": "2025-02-06T01:06:25.517Z",
     "devVersion": "6799a2f4d49283acc8d580ad",
     "liveVersion": "6799a2f4d49283acc8d580ae"
   },

@@ -56,6 +56,41 @@ const recorders = {
     submitButtonText: "Submit Your Recording for Analysis by Our Support Team",
     retryButtonText: "Record a New Video",
   },
+  withAudio: {
+    title: "Record Screen & Audio",
+    startButtonText: "Start Recording",
+    stopButtonText: "Stop Recording",
+    submitButtonText: "Submit Recording",
+    retryButtonText: "Record Again",
+    includeAudio: true,
+  },
+  videoOnly: {
+    title: "Silent Screen Recording",
+    startButtonText: "Start Screen Capture",
+    stopButtonText: "Stop Capture",
+    submitButtonText: "Submit Recording",
+    retryButtonText: "Record Again",
+    includeAudio: false,
+  },
+  fullConfig: {
+    title: "Full Configuration Demo",
+    startButtonText: "Start Recording",
+    stopButtonText: "Stop Recording",
+    submitButtonText: "Submit",
+    retryButtonText: "Try Again",
+    theme: "dark",
+    includeAudio: true,
+    includeVideo: true,
+  },
+  audioOnly: {
+    title: "Voice Recording Only",
+    startButtonText: "Start Voice Recording",
+    stopButtonText: "Stop Recording",
+    submitButtonText: "Submit Voice Note",
+    retryButtonText: "Record Again",
+    includeAudio: true,
+    includeVideo: false,
+  },
 } satisfies Record<string, ExtensionPayload>;
 
 // Stories
@@ -99,4 +134,46 @@ export const LongButtonText = createExtensionStory<ExtensionPayload>(
   extension_config,
   recorders.longText,
   options
+);
+
+export const WithAudio = createExtensionStory<ExtensionPayload>(
+  RecorderExtension,
+  extension_config,
+  recorders.withAudio,
+  options
+);
+
+export const VideoOnly = createExtensionStory<ExtensionPayload>(
+  RecorderExtension,
+  extension_config,
+  recorders.videoOnly,
+  options
+);
+
+export const FullConfiguration = createExtensionStory<ExtensionPayload>(
+  RecorderExtension,
+  extension_config,
+  recorders.fullConfig,
+  {
+    ...options,
+    containerStyles: {
+      ...options.containerStyles,
+      background: "#000000",
+      padding: "1rem",
+    },
+  }
+);
+
+export const AudioOnly = createExtensionStory<ExtensionPayload>(
+  RecorderExtension,
+  extension_config,
+  recorders.audioOnly,
+  {
+    ...options,
+    containerStyles: {
+      ...options.containerStyles,
+      background: "#f5f5f5",
+      padding: "1rem",
+    },
+  }
 );

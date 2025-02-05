@@ -20,6 +20,12 @@ const getSupportedMimeType = () => {
   return MIME_TYPES.find((type) => MediaRecorder.isTypeSupported(type)) || "";
 };
 
+const isMobileDevice = () => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+};
+
 const RecorderComponent: React.FC<ExtensionPayload> = ({
   title = "Screen Recording",
   startButtonText = "Start Recording",
@@ -27,6 +33,8 @@ const RecorderComponent: React.FC<ExtensionPayload> = ({
   submitButtonText = "Submit",
   retryButtonText = "Try Again",
   theme = "light",
+  includeAudio = false,
+  includeVideo = true,
 }) => {
   const [recordingState, setRecordingState] = useState<RecordingState>("idle");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -35,6 +43,12 @@ const RecorderComponent: React.FC<ExtensionPayload> = ({
   const recordedChunksRef = useRef<Blob[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+
+  useEffect(() => {
+    if (isMobileDevice()) {
+      handleError(RecorderError.NO_MOBILE_DEVICES);
+    }
+  }, []);
 
   // Cleanup preview URL
   useEffect(() => {
@@ -59,18 +73,65 @@ const RecorderComponent: React.FC<ExtensionPayload> = ({
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
-        audio: true,
-      });
+      // Check if the required APIs are available (for non-mobile case)
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+        handleError(RecorderError.DEVICE_NOT_SUPPORTED);
+        return;
+      }
+
+      let combinedStream;
+
+      if (includeVideo) {
+        // Request display media without audio first
+        const displayStream = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+          audio: false,
+        });
+        combinedStream = displayStream;
+      } else if (!includeVideo && includeAudio) {
+        // Audio-only recording
+        try {
+          const audioStream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: false,
+          });
+          combinedStream = audioStream;
+        } catch (audioError) {
+          handleError("Failed to access microphone");
+          return;
+        }
+      } else {
+        handleError("Either video or audio must be enabled");
+        return;
+      }
+
+      // If video is enabled and audio is requested, add audio stream
+      if (includeVideo && includeAudio && navigator.mediaDevices.getUserMedia) {
+        try {
+          const audioStream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: false,
+          });
+
+          // Combine the audio and video tracks
+          const tracks = [
+            ...combinedStream.getTracks(),
+            ...audioStream.getTracks(),
+          ];
+          combinedStream = new MediaStream(tracks);
+        } catch (audioError) {
+          console.warn("Could not get audio stream:", audioError);
+          // Continue with just display stream if audio fails
+        }
+      }
 
       const mimeType = getSupportedMimeType();
       if (!mimeType) {
         throw new Error("No supported MIME type found");
       }
 
-      streamRef.current = stream;
-      mediaRecorderRef.current = new MediaRecorder(stream, {
+      streamRef.current = combinedStream;
+      mediaRecorderRef.current = new MediaRecorder(combinedStream, {
         mimeType,
       });
 
@@ -183,55 +244,68 @@ const RecorderComponent: React.FC<ExtensionPayload> = ({
       <div className="recorder-ext-container">
         {title && <h2 className="recorder-ext-title">{title}</h2>}
 
-        <div className="recorder-ext-video-container">
-          <video
-            ref={videoRef}
-            className="recorder-ext-preview"
-            controls
-            style={{ display: recordingState === "preview" ? "block" : "none" }}
-            playsInline // Add playsinline for iOS
-          />
-        </div>
-
-        <div className="recorder-ext-controls">
-          {recordingState === "idle" && (
-            <button
-              className="recorder-ext-button recorder-ext-start"
-              onClick={startRecording}
-            >
-              {startButtonText}
-            </button>
-          )}
-
-          {recordingState === "recording" && (
-            <button
-              className="recorder-ext-button recorder-ext-stop"
-              onClick={stopRecording}
-            >
-              {stopButtonText}
-            </button>
-          )}
-
-          {recordingState === "preview" && (
-            <div className="recorder-ext-button-group">
-              <button
-                className={`recorder-ext-button recorder-ext-submit ${
-                  isSubmitted ? "submitted" : ""
-                }`}
-                onClick={submitRecording}
-                disabled={isSubmitted}
-              >
-                {submitButtonText}
-              </button>
-              <button
-                className="recorder-ext-button recorder-ext-retry"
-                onClick={resetRecording}
-              >
-                {retryButtonText}
-              </button>
+        {isMobileDevice() ? (
+          <div className="recorder-ext-mobile-message">
+            <p>
+              Screen recording is not supported on mobile devices. Please use a
+              desktop browser.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="recorder-ext-video-container">
+              <video
+                ref={videoRef}
+                className="recorder-ext-preview"
+                controls
+                style={{
+                  display: recordingState === "preview" ? "block" : "none",
+                }}
+                playsInline // Add playsinline for iOS
+              />
             </div>
-          )}
-        </div>
+
+            <div className="recorder-ext-controls">
+              {recordingState === "idle" && (
+                <button
+                  className="recorder-ext-button recorder-ext-start"
+                  onClick={startRecording}
+                >
+                  {startButtonText}
+                </button>
+              )}
+
+              {recordingState === "recording" && (
+                <button
+                  className="recorder-ext-button recorder-ext-stop"
+                  onClick={stopRecording}
+                >
+                  {stopButtonText}
+                </button>
+              )}
+
+              {recordingState === "preview" && (
+                <div className="recorder-ext-button-group">
+                  <button
+                    className={`recorder-ext-button recorder-ext-submit ${
+                      isSubmitted ? "submitted" : ""
+                    }`}
+                    onClick={submitRecording}
+                    disabled={isSubmitted}
+                  >
+                    {submitButtonText}
+                  </button>
+                  <button
+                    className="recorder-ext-button recorder-ext-retry"
+                    onClick={resetRecording}
+                  >
+                    {retryButtonText}
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

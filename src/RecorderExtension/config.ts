@@ -24,6 +24,8 @@ export type ExtensionPayload = {
   submitButtonText?: string;
   retryButtonText?: string;
   theme?: "light" | "dark";
+  includeAudio?: boolean;
+  includeVideo?: boolean;
 };
 
 // Recording state type
@@ -34,6 +36,7 @@ export enum RecorderError {
   PERMISSION_DENIED = "PERMISSION_DENIED",
   DEVICE_NOT_SUPPORTED = "DEVICE_NOT_SUPPORTED",
   RECORDING_FAILED = "RECORDING_FAILED",
+  NO_MOBILE_DEVICES = "NO_MOBILE_DEVICES",
 }
 
 export interface RecorderErrorPayload {

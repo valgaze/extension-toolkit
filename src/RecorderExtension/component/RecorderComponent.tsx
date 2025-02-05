@@ -1,6 +1,24 @@
-import React, { useState, useRef } from "react";
-import type { ExtensionPayload, RecordingState } from "../config";
+import React, { useState, useRef, useEffect } from "react";
+import type {
+  ExtensionPayload,
+  RecordingState,
+  RecorderInteraction,
+  RecorderErrorPayload,
+  RecorderSuccessPayload,
+} from "../config";
 import { RecorderError } from "../config";
+
+// List of MIME types to try in order of preference
+const MIME_TYPES = [
+  "video/webm",
+  "video/webm;codecs=vp8,opus",
+  "video/webm;codecs=vp9,opus",
+  "video/mp4",
+];
+
+const getSupportedMimeType = () => {
+  return MIME_TYPES.find((type) => MediaRecorder.isTypeSupported(type)) || "";
+};
 
 const RecorderComponent: React.FC<ExtensionPayload> = ({
   title = "Screen Recording",
@@ -11,18 +29,32 @@ const RecorderComponent: React.FC<ExtensionPayload> = ({
   theme = "light",
 }) => {
   const [recordingState, setRecordingState] = useState<RecordingState>("idle");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  const handleError = (error: RecorderError) => {
-    window.voiceflow?.chat?.interact({
-      type: "error",
-      payload: {
-        id: error,
-      },
-    });
+  // Cleanup preview URL
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  const interact = (interaction: RecorderInteraction) => {
+    window.voiceflow?.chat?.interact(interaction);
+  };
+
+  const handleError = (error: RecorderError | string) => {
+    const errorPayload: RecorderErrorPayload = {
+      id: typeof error === "string" ? RecorderError.RECORDING_FAILED : error,
+      details: typeof error === "string" ? error : undefined,
+    };
+    interact({ type: "error", payload: errorPayload });
   };
 
   const startRecording = async () => {
@@ -32,10 +64,17 @@ const RecorderComponent: React.FC<ExtensionPayload> = ({
         audio: true,
       });
 
+      const mimeType = getSupportedMimeType();
+      if (!mimeType) {
+        throw new Error("No supported MIME type found");
+      }
+
       streamRef.current = stream;
       mediaRecorderRef.current = new MediaRecorder(stream, {
-        mimeType: "video/webm",
+        mimeType,
       });
+
+      recordedChunksRef.current = []; // Clear any previous recording data
 
       mediaRecorderRef.current.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -43,24 +82,50 @@ const RecorderComponent: React.FC<ExtensionPayload> = ({
         }
       };
 
-      mediaRecorderRef.current.onstop = () => {
-        const blob = new Blob(recordedChunksRef.current, {
-          type: "video/webm",
-        });
-        if (videoRef.current) {
-          videoRef.current.src = URL.createObjectURL(blob);
-        }
-        setRecordingState("preview");
-
-        // Clean up the stream
-        streamRef.current?.getTracks().forEach((track) => track.stop());
+      mediaRecorderRef.current.onerror = () => {
+        handleError("MediaRecorder failed during recording");
       };
 
-      mediaRecorderRef.current.start();
+      mediaRecorderRef.current.onstop = () => {
+        try {
+          streamRef.current?.getTracks().forEach((track) => track.stop());
+
+          const blob = new Blob(recordedChunksRef.current, { type: mimeType });
+
+          // Kill previous preview URL if it exists
+          if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+          }
+
+          const newPreviewUrl = URL.createObjectURL(blob);
+          setPreviewUrl(newPreviewUrl);
+
+          if (videoRef.current) {
+            videoRef.current.src = newPreviewUrl;
+          }
+
+          setRecordingState("preview");
+        } catch (error) {
+          handleError(
+            error instanceof Error
+              ? error.message
+              : "Failed to process recording"
+          );
+        }
+      };
+
+      mediaRecorderRef.current.start(100); // Reduced interval for smoother recording
       setRecordingState("recording");
     } catch (error) {
-      if (error instanceof Error && error.name === "NotAllowedError") {
-        handleError(RecorderError.PERMISSION_DENIED);
+      console.error("Recording error:", error);
+      if (error instanceof Error) {
+        if (error.name === "NotAllowedError") {
+          handleError(RecorderError.PERMISSION_DENIED);
+        } else if (error.message === "No supported MIME type found") {
+          handleError(RecorderError.DEVICE_NOT_SUPPORTED);
+        } else {
+          handleError(error.message);
+        }
       } else {
         handleError(RecorderError.RECORDING_FAILED);
       }
@@ -70,27 +135,47 @@ const RecorderComponent: React.FC<ExtensionPayload> = ({
 
   const stopRecording = () => {
     if (mediaRecorderRef.current && recordingState === "recording") {
-      mediaRecorderRef.current.stop();
-      recordedChunksRef.current = [];
+      try {
+        mediaRecorderRef.current.stop();
+      } catch (error) {
+        handleError(
+          error instanceof Error ? error.message : "Failed to stop recording"
+        );
+        setRecordingState("idle");
+      }
     }
   };
 
   const submitRecording = () => {
-    const blob = new Blob(recordedChunksRef.current, { type: "video/webm" });
-    window.voiceflow?.chat?.interact({
-      type: "complete",
-      payload: {
-        recording: blob,
-      },
-    });
+    try {
+      const mimeType = mediaRecorderRef.current?.mimeType || "video/webm";
+      const blob = new Blob(recordedChunksRef.current, { type: mimeType });
+      const successPayload: RecorderSuccessPayload = {
+        mimeType,
+        recordingData: blob,
+      };
+      interact({ type: "complete", payload: successPayload });
+      setIsSubmitted(true);
+    } catch (error) {
+      handleError(
+        error instanceof Error ? error.message : "Failed to submit recording"
+      );
+    }
   };
 
   const resetRecording = () => {
+    // Clean up preview URL
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl("");
+    }
+
     recordedChunksRef.current = [];
     if (videoRef.current) {
       videoRef.current.src = "";
     }
     setRecordingState("idle");
+    setIsSubmitted(false);
   };
 
   return (
@@ -104,6 +189,7 @@ const RecorderComponent: React.FC<ExtensionPayload> = ({
             className="recorder-ext-preview"
             controls
             style={{ display: recordingState === "preview" ? "block" : "none" }}
+            playsInline // Add playsinline for iOS
           />
         </div>
 
@@ -129,8 +215,11 @@ const RecorderComponent: React.FC<ExtensionPayload> = ({
           {recordingState === "preview" && (
             <div className="recorder-ext-button-group">
               <button
-                className="recorder-ext-button recorder-ext-submit"
+                className={`recorder-ext-button recorder-ext-submit ${
+                  isSubmitted ? "submitted" : ""
+                }`}
                 onClick={submitRecording}
+                disabled={isSubmitted}
               >
                 {submitButtonText}
               </button>

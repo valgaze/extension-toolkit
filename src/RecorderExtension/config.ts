@@ -35,3 +35,23 @@ export enum RecorderError {
   DEVICE_NOT_SUPPORTED = "DEVICE_NOT_SUPPORTED",
   RECORDING_FAILED = "RECORDING_FAILED",
 }
+
+export interface RecorderErrorPayload {
+  id: RecorderError;
+  details?: string;
+}
+
+export interface RecorderSuccessPayload {
+  mimeType: string;
+  recordingData: Blob;
+}
+
+export type RecorderInteraction =
+  | {
+      type: "error";
+      payload: RecorderErrorPayload;
+    }
+  | {
+      type: "complete";
+      payload: RecorderSuccessPayload;
+    };

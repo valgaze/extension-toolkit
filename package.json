@@ -5,6 +5,7 @@
   "scripts": {
     "setup": "node ./util/cli.mjs || bun ./util/cli.mjs",
     "dev": "vite --open --config vite.config.ts",
+    "dev:mobile": "vite --host --config vite.config.ts",
     "build": "echo '📦 Build library: npm run build:extension' && echo '🖥️ Run example app: npm run serve:example'",
     "build:extension": "vite build --config ./util/build/vite.config.lib.ts",
     "build:extension:cdn": "vite build --config ./util/build/vite.config.lib.cdn.ts",
@@ -14,7 +15,10 @@
     "serve:example:lite": "echo \"🔧 Building... Please wait.\" && vite build --config ./util/build/vite.config.example_lite.ts && echo \"🚀 Access static prod build at: http://localhost:1337\" && echo \"⚠️ Warning: This is a static build. No live-reload or dev features enabled.\" && cd example-bundled && npx serve -l 1337",
     "build:extension:lite": "vite build --config vite.config.example_lite.ts",
     "build-storybook": "storybook build",
-    "dev:no-open": "vite --config vite.config.ts"
+    "dev:no-open": "vite --config vite.config.ts",
+    "build:storybook": "npx storybook build -o assets/public/_storybook && mv assets/public/_storybook/index.html assets/public/storybook.html && mv assets/public/_storybook/* assets/public/",
+    "build:public:demo": "vite build --config ./util/build/vite.config.public.ts",
+    "build:public": "npm run build:storybook && npm run build:public:demo"
   },
   "dependencies": {
     "react": "^18.2.0",

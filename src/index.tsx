@@ -15,3 +15,4 @@
  */
 export { FormExtension } from "./FormExtension/Extension.tsx";
 export { VideoExtension } from "./VideoExtension/Extension.tsx";
+export { RecorderExtension } from "./RecorderExtension/Extension.tsx";

@@ -193,7 +193,7 @@
       <p>Build powerful, type-safe extensions for Voiceflow chat widgets</p>
       <span class="zero-deps">✨ Use any framework/library</span>
       <div class="environment-badge">
-        Environment: __REPLACE__BUNDLE__ENVIRONMENT__
+        Environment: production
       </div>
     </div>
 
@@ -242,14 +242,14 @@
     <!-- Load your extensions -->
     <script type="module">
       // 👉 Add your Voiceflow project ID here
-      const PROJECT_ID = "__REPLACE__PROJECT_ID__";
+      const PROJECT_ID = "6799a2f4d49283acc8d580ac";
 
       if (PROJECT_ID === "__PLACEHOLDER__" || !PROJECT_ID) {
         throw new Error("Add your PROJECT_ID to continue");
       }
 
       // Import the extension(s)
-      import { __REPLACE__BUNDLE__EXPORT__LIST__ } from "./__REPLACE__BUNDLE__NAME__.js";
+      import { FormExtension,RecorderExtension,VideoExtension } from "./bundled.js";
 
       // Initialize Voiceflow Chat Widget
       (function (d, t) {
@@ -260,9 +260,9 @@
             .load({
               verify: { projectID: PROJECT_ID },
               url: "https://general-runtime.voiceflow.com",
-              versionID: "__REPLACE__BUNDLE__ENVIRONMENT__",
+              versionID: "production",
               assistant: {
-                extensions: [__REPLACE__BUNDLE__EXPORT__LIST__],
+                extensions: [FormExtension,RecorderExtension,VideoExtension],
               },
             })
             .then(() => {

@@ -16,9 +16,9 @@
     "build:extension:lite": "vite build --config vite.config.example_lite.ts",
     "build-storybook": "storybook build",
     "dev:no-open": "vite --config vite.config.ts",
-    "build:storybook": "npx storybook build -o assets/public/_storybook && mv assets/public/_storybook/index.html assets/public/storybook.html && mv assets/public/_storybook/* assets/public/",
+    "build:storybook": "npx storybook build -o assets/public/_storybook && mv assets/public/_storybook/index.html docs/storybook.html && mv assets/public/_storybook/* docs/",
     "build:public:demo": "vite build --config ./util/build/vite.config.public.ts",
-    "build:public": "npm run build:storybook && npm run build:public:demo"
+    "build:public": "rm -rf docs && mkdir docs && npm run build:storybook && npm run build:public:demo"
   },
   "dependencies": {
     "react": "^18.2.0",

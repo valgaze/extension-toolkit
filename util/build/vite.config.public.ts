@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       emptyOutDir: false,
-      outDir: path.resolve(__dirname, "..", "..", "assets", "public"),
+      outDir: path.resolve(__dirname, "..", "..", "docs"),
       minify: true,
       lib: {
         entry: path.resolve(__dirname, "..", "..", "src/index.tsx"),
@@ -66,12 +66,9 @@ export default defineConfig(({ mode }) => {
             });
 
             // Write this decorated example-bundled/index.html
-            await fs.writeFile(
-              path.resolve("assets", "public", "index.html"),
-              modified
-            );
+            await fs.writeFile(path.resolve("docs", "index.html"), modified);
 
-            console.log("✅ Successfully generated example-bundled/index.html");
+            console.log("✅ Successfully generated docs/index.html");
           } catch (error) {
             console.error("❌ Error generating index.html:", error);
             throw error;

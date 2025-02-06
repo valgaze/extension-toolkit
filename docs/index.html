@@ -88,7 +88,7 @@
 
       .get-started-link {
         display: block;
-        margin: 2rem auto;
+        margin: 3rem auto;
         padding: 1.5rem 3rem;
         font-size: 1.4rem;
         color: white;
@@ -192,9 +192,7 @@
       <h1>🚀 Extension Toolkit</h1>
       <p>Build powerful, type-safe extensions for Voiceflow chat widgets</p>
       <span class="zero-deps">✨ Use any framework/library</span>
-      <div class="environment-badge">
-        Environment: production
-      </div>
+      <div class="environment-badge">Environment: production</div>
     </div>
 
     <div class="container">
@@ -242,14 +240,18 @@
     <!-- Load your extensions -->
     <script type="module">
       // 👉 Add your Voiceflow project ID here
-      const PROJECT_ID = "6799a2f4d49283acc8d580ac";
+      const PROJECT_ID = "66d80257e44f2be86ee696e3";
 
       if (PROJECT_ID === "__PLACEHOLDER__" || !PROJECT_ID) {
         throw new Error("Add your PROJECT_ID to continue");
       }
 
       // Import the extension(s)
-      import { FormExtension,RecorderExtension,VideoExtension } from "./bundled.js";
+      import {
+        FormExtension,
+        RecorderExtension,
+        VideoExtension,
+      } from "./bundled.js";
 
       // Initialize Voiceflow Chat Widget
       (function (d, t) {
@@ -262,7 +264,7 @@
               url: "https://general-runtime.voiceflow.com",
               versionID: "production",
               assistant: {
-                extensions: [FormExtension,RecorderExtension,VideoExtension],
+                extensions: [FormExtension, RecorderExtension, VideoExtension],
               },
             })
             .then(() => {

@@ -192,7 +192,9 @@
       <h1>🚀 Extension Toolkit</h1>
       <p>Build powerful, type-safe extensions for Voiceflow chat widgets</p>
       <span class="zero-deps">✨ Use any framework/library</span>
-      <div class="environment-badge">Environment: production</div>
+      <div class="environment-badge">
+        Environment: production
+      </div>
     </div>
 
     <div class="container">
@@ -247,11 +249,7 @@
       }
 
       // Import the extension(s)
-      import {
-        FormExtension,
-        RecorderExtension,
-        VideoExtension,
-      } from "./bundled.js";
+      import { FormExtension,RecorderExtension,ToastExtension,VideoExtension } from "./bundled.js";
 
       // Initialize Voiceflow Chat Widget
       (function (d, t) {
@@ -264,7 +262,7 @@
               url: "https://general-runtime.voiceflow.com",
               versionID: "production",
               assistant: {
-                extensions: [FormExtension, RecorderExtension, VideoExtension],
+                extensions: [FormExtension,RecorderExtension,ToastExtension,VideoExtension],
               },
             })
             .then(() => {

@@ -17,3 +17,5 @@ export { FormExtension } from "./FormExtension/Extension.tsx";
 export { VideoExtension } from "./VideoExtension/Extension.tsx";
 export { RecorderExtension } from "./RecorderExtension/Extension.tsx";
 export { ToastExtension } from "./ToastExtension/Extension.tsx";
+export { ClientInspectorExtension } from "./ClientInspectorExtension/Extension.tsx";
+export { StarRaterExtension } from "./StarRaterExtension/Extension.tsx";

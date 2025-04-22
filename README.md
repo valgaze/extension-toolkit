@@ -117,6 +117,12 @@ This might take a few minutes to complete, so while you're waiting, let's get yo
 
 ![Voiceflow Project ID](./assets/project_id.png)
 
+## 4a) Turn off "private" mode for your agent
+
+- Since we'll be using the widget to interact with your extensions, scroll down the bottom of **General** and tick the toggle for private mode to OFF
+
+![Private mode](./assets/private_mode.gif)
+
 ## 5) Save your project ID to a .env file
 
 - Back in your terminal, run the following command to create a `.env` file in the root of the repo and save your project ID to it
@@ -146,13 +152,15 @@ npm run storybook
 
 - This will start **[Storybook](https://storybook.js.org/)** and open a new browser window at `http://localhost:6006`
 
-- Storybook lets you build and test your extensions in a sandbox environment. You can create different scenarios ("stories") to validate your extension's behavior, collaborate with team members, and ensure everything works perfectly before integrating with the chat widget. It's like a playground where you can experiment and fine-tune your extension without worrying (yet!) about the details of a large conversation system
+- Storybook lets you build and test your extensions in a sandbox environment. You can create different scenarios ("stories") to validate your extension's behavior, collaborate with team members, and ensure everything works perfectly before integrating with the chat widget
+
+- It's like a playground where you can experiment and fine-tune your extension without worrying (yet!) about the details of a large conversation system
 
 ![Storybook](./assets/storybook.gif)
 
 ## 7) Test with Live Widget
 
-- Run the following command to start the live widget
+- Run the following command to start the live chat widget
 
 ```sh
 npm run dev

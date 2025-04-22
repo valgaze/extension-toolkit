@@ -12,34 +12,52 @@
  */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import type { RenderExtension } from "../../util/types/extension";
-import { extension_config, type ExtensionPayload } from "./config";
+import { z } from "zod";
+import { extension_config } from "./config";
 import FormComponent from "./component/FormComponent.tsx";
 import styles from "./component/styles.css?inline";
+import { createExtension } from "../../util/extensions/index";
 
-export const FormExtension: RenderExtension<ExtensionPayload> = {
+const inputs = z.object({
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  fields: z.array(
+    z.object({
+      name: z.string(),
+      type: z.enum([
+        "text","email","tel","number","password","textarea","radio","checkbox","select","date","time","datetime-local","month","week","range","color","file","hidden","image","reset","submit","button"
+      ]),
+      label: z.string().optional(),
+      placeholder: z.string().optional(),
+      required: z.boolean().optional(),
+      pattern: z.string().optional(),
+      minLength: z.number().optional(),
+      maxLength: z.number().optional(),
+      options: z.array(z.string()).optional(), // for radio/checkbox/select
+    })
+  ),
+  submitText: z.string().optional(),
+  theme: z.enum(["light", "dark"]).optional(),
+});
+
+export type ExtensionPayload = z.infer<typeof inputs>;
+
+export const FormExtension = createExtension({
+  id: extension_config.id,
   name: extension_config.reference_name,
-  type: "response",
-  match: ({ trace }) =>
-    trace.type === extension_config.id ||
-    trace.payload?.name === extension_config.id,
-  render: ({ element, trace }) => {
+  llmDescription: extension_config.description,
+  inputs,
+  render: ({ data, element }) => {
     // Create shadow root
     const shadow = element.attachShadow({ mode: "open" });
     const container = document.createElement("div");
-
     // Add styles to shadow DOM
     const styleElement = document.createElement("style");
     styleElement.textContent = styles;
     shadow.appendChild(styleElement);
     shadow.appendChild(container);
-
     const root = ReactDOM.createRoot(container);
-    const payload = trace.payload;
-
-    // Wrap render in requestAnimationFrame to batch with React's updates
-    root.render(<FormComponent {...payload} />);
-
+    root.render(<FormComponent {...data} />);
     return () => {
       requestAnimationFrame(() => {
         root.unmount();
@@ -49,4 +67,4 @@ export const FormExtension: RenderExtension<ExtensionPayload> = {
       });
     };
   },
-};
+});

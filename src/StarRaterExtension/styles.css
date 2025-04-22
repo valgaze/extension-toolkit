@@ -1,0 +1,126 @@
+.vf-rating-container {
+  padding: 1rem;
+  font-family: sans-serif;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.vf-rating-question {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.vf-star-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.vf-stars {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.vf-star {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #ddd;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.vf-star:hover,
+.vf-star-active {
+  color: #ffd700;
+}
+
+.vf-rating-label-low,
+.vf-rating-label-high {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.vf-comment-box {
+  margin-top: 1rem;
+}
+
+.vf-comment-box label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.vf-comment-box textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  font-family: inherit;
+  background-color: white;
+  color: #333;
+}
+
+.vf-submit-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.vf-submit-button:hover {
+  background-color: #0056b3;
+}
+
+.vf-rating-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.6);
+  z-index: 10;
+  pointer-events: all;
+  cursor: not-allowed;
+  border-radius: 8px;
+}
+
+/* Dark mode styles */
+:host-context(.dark) .vf-rating-container {
+  background-color: #1a1a1a;
+}
+
+:host-context(.dark) .vf-rating-question {
+  color: #e0e0e0;
+}
+
+:host-context(.dark) .vf-rating-label-low,
+:host-context(.dark) .vf-rating-label-high {
+  color: #a0a0a0;
+}
+
+:host-context(.dark) .vf-comment-box label {
+  color: #e0e0e0;
+}
+
+:host-context(.dark) .vf-comment-box textarea {
+  background-color: #2a2a2a;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+:host-context(.dark) .vf-submit-button {
+  background-color: #0066cc;
+}
+
+:host-context(.dark) .vf-submit-button:hover {
+  background-color: #0052a3;
+}

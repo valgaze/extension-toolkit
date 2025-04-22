@@ -55,7 +55,7 @@
                 versionID: isProduction ? "production" : "development",
                 assistant: {
                   extensions, // Use dynamically imported extensions
-                },
+                  persistence: 'memory'                },
               })
               .then(() => {
                 const urlParams = new URLSearchParams(window.location.search);

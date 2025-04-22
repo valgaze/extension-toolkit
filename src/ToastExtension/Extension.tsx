@@ -20,9 +20,9 @@ const defaultStyle = {
 };
 
 // Initialize Toaster once at startup
-(() => {
+((isBrowser: boolean) => {
   const containerId = "sonner-toast-container";
-  if (document.getElementById(containerId)) return;
+  if (!isBrowser || document.getElementById(containerId)) return;
 
   const container = document.createElement("div");
   container.id = containerId;
@@ -43,7 +43,7 @@ const defaultStyle = {
       },
     })
   );
-})();
+})(typeof document !== "undefined");
 
 export const ToastExtension: EffectExtension = {
   name: extension_config.reference_name,
@@ -52,7 +52,6 @@ export const ToastExtension: EffectExtension = {
     trace.type === extension_config.id ||
     trace.payload?.name === extension_config.id,
   effect: async ({ trace }: { trace: VoiceflowTrace<unknown> }) => {
-    console.log("trace", trace);
     const { type, message, options = {} } = trace.payload as ExtensionPayload;
     const toastOptions = {
       ...options,

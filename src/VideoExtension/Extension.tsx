@@ -1,16 +1,27 @@
-import type { RenderExtension } from "../../util/types/extension";
+import { z } from "zod";
 import { extension_config } from "./config";
-import type { ExtensionPayload } from "./config";
+import { createExtension } from "../../util/extensions/index";
 
-// Using "vanilla" JS to render the video
-export const VideoExtension: RenderExtension<ExtensionPayload> = {
+const inputs = z.object({
+  url: z.string(),
+  title: z.string().optional(),
+  autoplay: z.boolean().optional(),
+  loop: z.boolean().optional(),
+  muted: z.boolean().optional(),
+  controls: z.boolean().optional(),
+  poster: z.string().optional(),
+  startAt: z.string().optional(),
+});
+
+export type ExtensionPayload = z.infer<typeof inputs>;
+
+export const VideoExtension = createExtension({
+  id: extension_config.id,
   name: extension_config.reference_name,
-  type: "response",
-  match: ({ trace }) =>
-    trace.type === extension_config.id ||
-    trace.payload?.name === extension_config.id,
-  render: ({ element, trace }) => {
-    const { url, autoplay, controls, muted, loop, title } = trace.payload || {};
+  llmDescription: extension_config.description,
+  inputs,
+  render: ({ data, element }) => {
+    const { url, autoplay, controls, muted, loop, title, poster, startAt } = data;
 
     // Helper to check if URL is YouTube
     const isYouTubeUrl = (url: string): boolean => {
@@ -22,20 +33,17 @@ export const VideoExtension: RenderExtension<ExtensionPayload> = {
     // Helper to get YouTube video ID
     const getYouTubeId = (url: string): string => {
       const regExp =
-        /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-      const match = url?.match(regExp);
-      return match?.[2] ?? "";
+        /(?:youtube\.com\/.*[?&]v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      const match = url.match(regExp);
+      return match?.[1] ?? "";
     };
 
     // Helper to parse timestamp string to seconds
     const parseTimestamp = (timestamp: string): number => {
       if (!timestamp) return 0;
-
       const regex = /(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/;
       const matches = timestamp.match(regex);
-
       if (!matches) return 0;
-
       const [_, hours, minutes, seconds] = matches;
       return (
         parseInt(hours || "0") * 3600 +
@@ -48,12 +56,9 @@ export const VideoExtension: RenderExtension<ExtensionPayload> = {
       // Create YouTube embed
       const container = document.createElement("div");
       container.style.cssText = "position: relative; width: 100%;";
-
       const iframe = document.createElement("iframe");
       const videoId = getYouTubeId(url);
-
-      const startTimeSeconds = parseTimestamp(trace.payload?.startAt || "");
-
+      const startTimeSeconds = parseTimestamp(startAt || "");
       const params = new URLSearchParams({
         autoplay: autoplay ? "1" : "0",
         mute: muted ? "1" : "0",
@@ -62,6 +67,7 @@ export const VideoExtension: RenderExtension<ExtensionPayload> = {
         start: startTimeSeconds.toString(), // Add start time parameter
       });
 
+      console.log(`VideoId: ${videoId}`)
       iframe.src = `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
       iframe.style.cssText = `
         border: none;
@@ -122,4 +128,4 @@ export const VideoExtension: RenderExtension<ExtensionPayload> = {
       }
     };
   },
-};
+});

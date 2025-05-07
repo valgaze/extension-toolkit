@@ -12,34 +12,41 @@
  */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import type { RenderExtension } from "../../util/types/extension";
-import { extension_config, type ExtensionPayload } from "./config";
+import { z } from "zod";
+import { extension_config } from "./config";
 import RecorderComponent from "./component/RecorderComponent";
 import styles from "./component/styles.css?inline";
+import { createExtension } from "../../util/extensions/index";
 
-export const RecorderExtension: RenderExtension<ExtensionPayload> = {
+const inputs = z.object({
+  title: z.string().optional(),
+  startButtonText: z.string().optional(),
+  stopButtonText: z.string().optional(),
+  submitButtonText: z.string().optional(),
+  retryButtonText: z.string().optional(),
+  theme: z.enum(["light", "dark"]).optional(),
+  includeAudio: z.boolean().optional(),
+  includeVideo: z.boolean().optional(),
+});
+
+export type ExtensionPayload = z.infer<typeof inputs>;
+
+export const RecorderExtension = createExtension({
+  id: extension_config.id,
   name: extension_config.reference_name,
-  type: "response",
-  match: ({ trace }) =>
-    trace.type === extension_config.id ||
-    trace.payload?.name === extension_config.id,
-  render: ({ element, trace }) => {
+  llmDescription: extension_config.description,
+  inputs,
+  render: ({ data, element }) => {
     // Create shadow root
     const shadow = element.attachShadow({ mode: "open" });
     const container = document.createElement("div");
-
     // Add styles to shadow DOM
     const styleElement = document.createElement("style");
     styleElement.textContent = styles;
     shadow.appendChild(styleElement);
     shadow.appendChild(container);
-
     const root = ReactDOM.createRoot(container);
-    const payload = trace.payload;
-
-    // Wrap render in requestAnimationFrame to batch with React's updates
-    root.render(<RecorderComponent {...payload} />);
-
+    root.render(<RecorderComponent {...data} />);
     return () => {
       requestAnimationFrame(() => {
         root.unmount();
@@ -49,4 +56,4 @@ export const RecorderExtension: RenderExtension<ExtensionPayload> = {
       });
     };
   },
-};
+});

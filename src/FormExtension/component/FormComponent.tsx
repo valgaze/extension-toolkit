@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { ExtensionPayload } from "./../config";
+import type { ExtensionPayload } from "./../Extension.tsx";
 
 const FormComponent: React.FC<ExtensionPayload> = ({
   title = "",

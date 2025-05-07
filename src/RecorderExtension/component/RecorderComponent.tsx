@@ -1,13 +1,36 @@
 import React, { useState, useRef, useEffect } from "react";
-import type {
-  ExtensionPayload,
-  RecordingState,
-  RecorderInteraction,
-  RecorderErrorPayload,
-  RecorderSuccessPayload,
-} from "../config";
-import { RecorderError } from "../config";
+import type { ExtensionPayload } from "../Extension.tsx";
 
+// Recording state type
+export type RecordingState = "idle" | "recording" | "preview" | "uploading";
+
+// Error types
+export enum RecorderError {
+  PERMISSION_DENIED = "PERMISSION_DENIED",
+  DEVICE_NOT_SUPPORTED = "DEVICE_NOT_SUPPORTED",
+  RECORDING_FAILED = "RECORDING_FAILED",
+  NO_MOBILE_DEVICES = "NO_MOBILE_DEVICES",
+}
+
+export interface RecorderErrorPayload {
+  id: RecorderError;
+  details?: string;
+}
+
+export interface RecorderSuccessPayload {
+  mimeType: string;
+  recordingData: Blob;
+}
+
+export type RecorderInteraction =
+  | {
+      type: "error";
+      payload: RecorderErrorPayload;
+    }
+  | {
+      type: "complete";
+      payload: RecorderSuccessPayload;
+    };
 // List of MIME types to try in order of preference
 const MIME_TYPES = [
   "video/webm",

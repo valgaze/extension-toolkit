@@ -6,13 +6,3 @@ export const extension_config: ExtensionConfig = {
   description: "Renders a video player for various video sources",
 };
 
-export type ExtensionPayload = {
-  url: string;
-  title?: string;
-  autoplay?: boolean;
-  loop?: boolean;
-  muted?: boolean;
-  controls?: boolean;
-  poster?: string;
-  startAt?: string;
-};

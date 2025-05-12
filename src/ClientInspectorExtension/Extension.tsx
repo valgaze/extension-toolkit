@@ -1,11 +1,7 @@
 import { createExtension } from "../../util/extensions/index";
 import { extension_config } from "./config";
-import { z } from "zod";
-
-import type {ClientInfo} from "./config";
-const clientInfoSchema = z.object({
-  action: z.literal("collect").optional(),
-});
+import { z } from "zod/v4";
+import type { ClientInfo } from "./config";
 
 const getBrowserInfo = (): { name: string; version: string } => {
   const userAgent = navigator.userAgent;
@@ -72,19 +68,31 @@ const collectClientInfo = (): ClientInfo => {
     isTouchDevice: "ontouchstart" in window || navigator.maxTouchPoints > 0,
     browser: getBrowserInfo(),
     os: getOSInfo(),
-    isDarkMode: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
+    isDarkMode:
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches,
   };
 };
+
+// Inputs for the extension
+const clientInfoSchema = z.object({
+  message: z.string().default("Client info collected and sent to agent"),
+});
 
 export const ClientInspectorExtension = createExtension({
   name: extension_config.reference_name,
   id: extension_config.id,
   llmDescription: extension_config.description,
   inputs: clientInfoSchema,
-  render: ({ element, bridge }) => {
+  render: ({ bridge, element, inputs }) => {
+    // Step 1: collect data
     const clientInfo = collectClientInfo();
+    // Step 2: dispatch back to conversation diagram
     bridge.complete({ clientInfo });
-    element.innerHTML = `<div style="font-family:sans-serif;font-size:14px;padding:1rem;">Client info collected and sent.</div>`;
+    // Step 3: Show the user what happened
+    // Note: this could alternatively be an effects extension w/ stop-on-action enabled if you did not want to render anything
+    // See src/ToastExtension/Extension.tsx for an example
+    element.innerHTML = `<div style="font-family:sans-serif;font-size:14px;padding:1rem;">${inputs.message}</div>`;
     return () => {
       element.innerHTML = "";
     };

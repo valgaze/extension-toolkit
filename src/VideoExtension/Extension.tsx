@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { extension_config } from "./config";
 import { createExtension } from "../../util/extensions/index";
 
@@ -20,8 +20,9 @@ export const VideoExtension = createExtension({
   name: extension_config.reference_name,
   llmDescription: extension_config.description,
   inputs,
-  render: ({ data, element }) => {
-    const { url, autoplay, controls, muted, loop, title, poster, startAt } = data;
+  render: ({ inputs, element }) => {
+    const { url, autoplay, controls, muted, loop, title, poster, startAt } =
+      inputs;
 
     // Helper to check if URL is YouTube
     const isYouTubeUrl = (url: string): boolean => {
@@ -67,7 +68,6 @@ export const VideoExtension = createExtension({
         start: startTimeSeconds.toString(), // Add start time parameter
       });
 
-      console.log(`VideoId: ${videoId}`)
       iframe.src = `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
       iframe.style.cssText = `
         border: none;

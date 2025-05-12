@@ -1,11 +1,11 @@
 import { toast, Toaster } from "sonner";
-import type {
-  EffectExtension,
-  VoiceflowTrace,
-} from "../../util/types/extension";
+import { z } from "zod/v4";
+
 import { extension_config, type ExtensionPayload } from "./config";
 import * as ReactDOM from "react-dom/client";
 import React from "react";
+
+import { createEffectExtension } from "../../util/extensions";
 
 // Default toast styles
 const defaultStyle = {
@@ -45,19 +45,59 @@ const defaultStyle = {
   );
 })(typeof document !== "undefined");
 
-export const ToastExtension: EffectExtension = {
-  name: extension_config.reference_name,
-  type: "effect",
-  match: ({ trace }: { trace: VoiceflowTrace<unknown> }) =>
-    trace.type === extension_config.id ||
-    trace.payload?.name === extension_config.id,
-  effect: async ({ trace }: { trace: VoiceflowTrace<unknown> }) => {
-    const { type, message, options = {} } = trace.payload as ExtensionPayload;
+// Position enum
+const PositionSchema = z.enum([
+  "top-left",
+  "top-center",
+  "top-right",
+  "bottom-left",
+  "bottom-center",
+  "bottom-right",
+]);
+
+// Reusable style schema, basically React.CSSProperties
+const StyleSchema = z.object({
+  background: z.string().optional(),
+  color: z.string().optional(),
+  padding: z.string().optional(),
+  borderRadius: z.string().optional(),
+  border: z.string().optional(),
+  boxShadow: z.string().optional(),
+  fontSize: z.string().optional(),
+  fontWeight: z.string().optional(),
+});
+
+// Toast options schema (clean, JSON-only)
+const ToastOptionsSchema = z.object({
+  description: z.string().optional(),
+  duration: z.number().optional(),
+  className: z.string().optional(),
+  position: PositionSchema.optional(),
+  dismissible: z.boolean().optional(),
+  closeButton: z.boolean().optional(),
+  style: StyleSchema.optional(),
+});
+
+// Main extension props
+export const inputs = z.object({
+  type: z
+    .enum(["default", "success", "error", "loading", "custom"])
+    .default("default"),
+  message: z.string(),
+  options: ToastOptionsSchema.optional(),
+});
+
+export const ToastExtension = createEffectExtension({
+  id: extension_config.id,
+  inputs,
+  name: "Toast Extension",
+  llmDescription: `An extension which will pop up a custom toast on the user's screen`,
+  effect({ inputs }) {
+    const { type, message, options = {} } = inputs; // inputs is same as trace.payload
     const toastOptions = {
       ...options,
       style: { ...defaultStyle, ...options.style },
     };
-
     switch (type) {
       case "success":
         toast.success(message, toastOptions);
@@ -71,5 +111,7 @@ export const ToastExtension: EffectExtension = {
       default:
         toast(message, toastOptions);
     }
+
+    // Generally you do not send data back with an effects extension but you could
   },
-};
+});

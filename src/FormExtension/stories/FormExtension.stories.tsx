@@ -1,27 +1,42 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { createExtensionStory } from "../../../util/storybook/index.tsx";
+import ExtensionDocs from "../../../util/storybook/ExtensionDocs";
 
-// Story data
+// Extension and config
+import { FormExtension } from "../Extension.tsx";
+import { extension_config } from "../config.ts";
 import { forms } from "./story_data.ts";
 
-// Extension
-import { FormExtension } from "../Extension.tsx";
-// Extension Config
+// Define the field type to match the schema
+type FormField = {
+  name: string;
+  type: string;
+  label?: string;
+  placeholder?: string;
+  required?: boolean;
+  pattern?: string;
+  minLength?: number;
+  maxLength?: number;
+  options?: string[]; // for radio/checkbox/select
+};
 
-import { extension_config } from "../config.ts";
-import type { ExtensionPayload } from "../config.ts";
+type ExtensionPayload = {
+  title?: string;
+  subtitle?: string;
+  fields: FormField[];
+  submitText?: string;
+  theme?: "light" | "dark";
+};
 
-// Meta
-const meta: Meta<typeof HTMLDivElement> = {
-  title: "FormExtension",
+const meta = {
+  title: "Extensions/Form",
   parameters: {
     layout: "centered",
   },
-};
+} satisfies Meta<typeof HTMLDivElement>;
 
 export default meta;
-type Story = StoryObj<typeof HTMLDivElement>;
 
 const options = {
   containerStyles: {
@@ -29,7 +44,6 @@ const options = {
   },
 };
 
-// Build stories
 export const ContactForm = createExtensionStory<ExtensionPayload>(
   FormExtension,
   extension_config,
@@ -55,3 +69,8 @@ export const VideoBuilder = createExtensionStory<ExtensionPayload>(
   forms.VideoBuilder,
   options
 );
+
+// Documentation story that shows the extension's description and prompt
+export const Prompts: StoryObj<typeof HTMLDivElement> = {
+  render: () => <ExtensionDocs extension={FormExtension} />,
+};

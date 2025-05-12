@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ToastExtension } from "../Extension";
 import { extension_config } from "../config";
 import type { ExtensionPayload } from "../config";
+import ExtensionDocs from "../../../util/storybook/ExtensionDocs";
+import { EffectDebugPanel } from "../../../util/storybook/EffectDebugPanel";
 
 const meta = {
   title: "Extensions/Toast",
@@ -12,168 +14,46 @@ const meta = {
 } satisfies Meta<typeof HTMLDivElement>;
 
 export default meta;
+
 type Story = StoryObj<typeof HTMLDivElement>;
 
-// Debug panel component for effect extensions
-const EffectDebugPanel: React.FC<{
-  configId: string;
-  payload: ExtensionPayload;
-  onTrigger: (payload: ExtensionPayload) => void;
-}> = ({ configId, payload, onTrigger }) => {
-  const [editablePayload, setEditablePayload] = React.useState(
-    JSON.stringify(payload, null, 2)
-  );
-  const [error, setError] = React.useState<string | null>(null);
-
-  const handleTrigger = () => {
-    try {
-      const parsed = JSON.parse(editablePayload);
-      setError(null);
-      onTrigger(parsed);
-    } catch (e) {
-      setError((e as Error).message);
-    }
-  };
-
-  return (
-    <div
-      style={{
-        position: "fixed",
-        top: "20px",
-        right: "20px",
-        background: "rgba(255, 255, 255, 0.95)",
-        border: "1px solid #e0e0e0",
-        borderRadius: "8px",
-        padding: "16px",
-        maxWidth: "400px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-        fontFamily: "monospace",
-        fontSize: "12px",
-        backdropFilter: "blur(4px)",
-      }}
-    >
-      <div
-        style={{
-          marginBottom: "12px",
-          fontWeight: "bold",
-          color: "#666",
-          display: "flex",
-          alignItems: "center",
-          gap: "6px",
-        }}
-      >
-        <span>🔔</span>
-        <span>Toast Debug Panel</span>
-      </div>
-      <div style={{ marginBottom: "8px", color: "#666" }}>
-        Extension ID: <span style={{ color: "#000" }}>{configId}</span>
-      </div>
-      <textarea
-        value={editablePayload}
-        onChange={(e) => setEditablePayload(e.target.value)}
-        style={{
-          width: "100%",
-          minHeight: "200px",
-          fontFamily: "monospace",
-          fontSize: "12px",
-          padding: "8px",
-          border: `1px solid ${error ? "#ff0000" : "#eee"}`,
-          borderRadius: "4px",
-          background: "#f5f5f5",
-          marginBottom: error ? "4px" : "12px",
-        }}
-      />
-      {error && (
-        <div
-          style={{ color: "#ff0000", marginBottom: "12px", fontSize: "11px" }}
-        >
-          {error}
-        </div>
-      )}
-      <div style={{ display: "flex", gap: "8px" }}>
-        <button
-          onClick={handleTrigger}
-          style={{
-            flex: 1,
-            border: "1px solid #e0e0e0",
-            borderRadius: "4px",
-            padding: "6px 12px",
-            background: "#f8f8f8",
-            cursor: "pointer",
-            fontSize: "12px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "6px",
-          }}
-        >
-          <span>🔔</span>
-          <span>Show Toast</span>
-        </button>
-        <button
-          onClick={() => {
-            navigator.clipboard.writeText(editablePayload);
-            const btn = document.activeElement as HTMLButtonElement;
-            const originalText = btn.innerText;
-            btn.innerText = "✅ Copied!";
-            setTimeout(() => {
-              btn.innerText = originalText;
-            }, 1000);
-          }}
-          style={{
-            flex: 1,
-            border: "1px solid #e0e0e0",
-            borderRadius: "4px",
-            padding: "6px 12px",
-            background: "#f8f8f8",
-            cursor: "pointer",
-            fontSize: "12px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "6px",
-          }}
-        >
-          <span>📋</span>
-          <span>Copy</span>
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// Create a story template for effect extensions
+// Helper function to create effect stories
 const createEffectStory = (payload: ExtensionPayload): Story => ({
   render: () => {
-    const handleTrigger = (payload: ExtensionPayload) => {
-      ToastExtension.effect?.({
-        trace: {
-          type: extension_config.id,
-          payload: {
-            name: extension_config.id,
-            ...payload,
-          },
-        },
-      });
-    };
-
     return (
       <>
         <div style={{ padding: "20px" }}>
           <h3>Toast Extension Demo</h3>
-          <p>Use the debug panel to trigger and customize toasts.</p>
+          <p>Click the button below to trigger the toast.</p>
         </div>
         <EffectDebugPanel
           configId={extension_config.id}
           payload={payload}
-          onTrigger={handleTrigger}
+          onTrigger={(p) => {
+            ToastExtension.effect?.({
+              trace: {
+                type: extension_config.id,
+                payload: p,
+                time: Date.now(),
+                defaultPath: 0,
+                paths: [],
+              },
+              inputs: p,
+              bridge: {
+                complete: () => {},
+                fail: console.error,
+                debug: console.log,
+                sendRaw: () => {},
+              },
+            });
+          }}
         />
       </>
     );
   },
 });
 
-// Sample toast payloads - all JSON serializable
+// Define all toast variations
 const toasts = {
   default: {
     type: "default",
@@ -296,3 +176,8 @@ export const Gradient = createEffectStory(toasts.gradient);
 export const CustomPosition = createEffectStory(toasts.customPosition);
 export const Minimal = createEffectStory(toasts.minimal);
 export const Branded = createEffectStory(toasts.branded);
+
+// Documentation story that shows the extension's description and prompt
+export const Prompts: Story = {
+  render: () => <ExtensionDocs extension={ToastExtension} />,
+};

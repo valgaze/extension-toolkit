@@ -1,69 +1,91 @@
 // Stories that render a chat widget with a form extension
-import React, { useEffect } from "react";
-import type {
-  EffectExtension,
-  RenderExtension,
-  VoiceflowExtension,
-  ExtensionConfig,
-} from "../types/extension";
+import React from "react";
 import type { StoryObj } from "@storybook/react";
+import { RenderDebugPanel } from "./RenderDebugPanel";
+import type {
+  RenderExtension,
+  VoiceflowTrace,
+  RenderActions,
+  RenderExtensionProps,
+} from "../extensions/types";
+import type { ExtensionMeta } from "../extensions/types";
 
 type Story = StoryObj<typeof HTMLDivElement>;
 
-// Use with caution-- unstable :/
-/**
- * Creates a Storybook story that renders a Voiceflow chat widget
- * @template T - The type of the trace payload
- * @template E - The type of Voiceflow extension (RenderExtension | EffectExtension)
- * @param tracePayload - The payload to be traced
- * @param extension - The Voiceflow extension to be used
- * @param projectId - The Voiceflow project ID
- * @param mode - The runtime mode ('development' or 'production')
- * @returns A Storybook story object
- */
-export const createChatWidgetStory = <
-  T extends unknown = unknown,
-  E extends VoiceflowExtension = RenderExtension | EffectExtension
->(
-  extension: E | E[],
-  projectId: string,
-  mode: "development" | "production" = "development"
-): Story => {
-  if (!projectId?.trim()) {
-    throw new Error("projectId is required for createChatWidgetStory");
-  }
+export { EffectDebugPanel } from "./EffectDebugPanel";
 
+interface ExtensionStoryOptions {
+  containerStyles?: React.CSSProperties;
+}
+
+/**
+ * Creates a Storybook story for rendering an extension
+ * @template TPayload - The type of the extension payload
+ */
+export function createExtensionStory<T>(
+  extension: RenderExtension,
+  config: ExtensionMeta<any>,
+  payload: T,
+  options: ExtensionStoryOptions = {}
+): StoryObj<typeof HTMLDivElement> {
   return {
     render: () => {
-      useEffect(() => {
-        const script = document.createElement("script");
-        script.type = "text/javascript";
-        script.onload = () => {
-          window.voiceflow.chat
-            .load({
-              verify: { projectID: projectId },
-              url: "https://general-runtime.voiceflow.com",
-              versionID: mode,
-              assistant: {
-                extensions: Array.isArray(extension) ? extension : [extension],
-              },
-            })
-            .then(() => {
-              window.voiceflow.chat.open();
-            });
-        };
-        script.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
-        document.body.appendChild(script);
+      const element = document.createElement("div");
+      const { containerStyles = {} } = options;
 
-        return () => {
-          document.querySelector("#voiceflow-chat")?.remove();
-        };
-      }, []);
+      Object.assign(element.style, {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "200px",
+        padding: "20px",
+        ...containerStyles,
+      });
 
-      return <div style={{ width: "100%", height: "100vh" }} />;
+      const trace: VoiceflowTrace = {
+        type: config.id,
+        payload: {
+          ...payload,
+          $config: {
+            logs: true,
+            schema: true,
+            error: "console",
+            dark: false,
+          },
+        },
+        time: Date.now(),
+        defaultPath: 0,
+        paths: [],
+      };
+
+      const bridge: RenderActions<unknown> = {
+        complete: () => {},
+        fail: console.error,
+        debug: console.log,
+        sendRaw: () => {},
+      };
+
+      const renderProps: RenderExtensionProps<unknown> = {
+        trace,
+        element,
+        bridge,
+        inputs: trace.payload,
+      };
+
+      extension.render?.(renderProps);
+
+      return (
+        <div style={{ width: "100%" }}>
+          {React.createElement("div", {
+            ref: (node) => node && node.appendChild(element),
+          })}
+          <RenderDebugPanel configId={config.id} payload={payload} />
+        </div>
+      );
     },
   };
-};
+}
 
 const ExtensionDebugPanel: React.FC<{
   configId: string;
@@ -179,81 +201,3 @@ const ExtensionDebugPanel: React.FC<{
     </div>
   );
 };
-
-/**
- * Creates a Storybook story for rendering an extension
- * @template TPayload - The type of the extension payload
- * @template TConfig - The type of the extension configuration
- */
-export const createExtensionStory = <
-  TPayload = unknown,
-  TConfig extends ExtensionConfig = ExtensionConfig
->(
-  extension: RenderExtension<TPayload>,
-  config: TConfig,
-  initialPayload: TPayload,
-  options?: {
-    containerStyles?: React.CSSProperties;
-  }
-): Story => ({
-  args: {
-    showDebugPanel: true,
-  },
-  argTypes: {
-    showDebugPanel: {
-      control: "boolean",
-      description: "Toggle debug panel visibility",
-      defaultValue: true,
-    },
-  },
-  render: ({ showDebugPanel = true }) => {
-    const [containerRef, setContainerRef] =
-      React.useState<HTMLDivElement | null>(null);
-    const [currentPayload, setCurrentPayload] = React.useState(initialPayload);
-    const cleanupRef = React.useRef<(() => void) | undefined>();
-
-    React.useEffect(() => {
-      if (!containerRef) return;
-
-      // Cleanup previous render if it exists
-      if (cleanupRef.current) {
-        cleanupRef.current();
-      }
-
-      // Render with new payload
-      setTimeout(() => {
-        cleanupRef.current = extension.render({
-          element: containerRef,
-          trace: {
-            type: config.id,
-            payload: currentPayload,
-          },
-        });
-      }, 0);
-
-      return () => {
-        setTimeout(() => {
-          cleanupRef.current?.();
-        }, 0);
-      };
-    }, [containerRef, currentPayload]);
-
-    return (
-      <>
-        <div
-          ref={setContainerRef}
-          style={{
-            ...options?.containerStyles,
-          }}
-        />
-        {showDebugPanel && (
-          <ExtensionDebugPanel
-            configId={config.id}
-            payload={currentPayload}
-            // onPayloadChange={setCurrentPayload}
-          />
-        )}
-      </>
-    );
-  },
-});

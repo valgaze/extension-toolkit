@@ -1,11 +1,11 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { createExtensionStory } from "../../../util/storybook/index.tsx";
+import ExtensionDocs from "../../../util/storybook/ExtensionDocs";
 
 // Extension and config
-import { VideoExtension } from "../Extension.tsx";
+import { VideoExtension, type ExtensionPayload } from "../Extension.tsx";
 import { extension_config } from "../config.ts";
-import type { ExtensionPayload } from "../config.ts";
 
 const meta = {
   title: "Extensions/Video",
@@ -15,7 +15,27 @@ const meta = {
 } satisfies Meta<typeof HTMLDivElement>;
 
 export default meta;
-type Story = StoryObj<typeof HTMLDivElement>;
+
+// Basic video player
+export const Basic = createExtensionStory<ExtensionPayload>(
+  VideoExtension,
+  extension_config,
+  {
+    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  }
+);
+
+// Video with custom options
+export const WithOptions = createExtensionStory<ExtensionPayload>(
+  VideoExtension,
+  extension_config,
+  {
+    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    autoplay: true,
+    controls: true,
+    muted: true,
+  }
+);
 
 const options = {
   containerStyles: {
@@ -96,3 +116,8 @@ export const NonYoutubeVideoEmbed = createExtensionStory<ExtensionPayload>(
   videos.localVideo,
   options
 );
+
+// Documentation story that shows the extension's description and prompt
+export const Documentation: StoryObj<typeof HTMLDivElement> = {
+  render: () => <ExtensionDocs extension={VideoExtension} />,
+};

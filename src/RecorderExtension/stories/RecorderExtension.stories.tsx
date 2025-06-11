@@ -1,11 +1,12 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { createExtensionStory } from "../../../util/storybook/index.tsx";
+import ExtensionDocs from "../../../util/storybook/ExtensionDocs";
 
 // Extension and config
 import { RecorderExtension } from "../Extension.tsx";
 import { extension_config } from "../config.ts";
-import type { ExtensionPayload } from "../config.ts";
+import type { ExtensionPayload } from "../Extension.tsx";
 
 const meta = {
   title: "Extensions/Recorder",
@@ -71,16 +72,6 @@ const recorders = {
     submitButtonText: "Submit Recording",
     retryButtonText: "Record Again",
     includeAudio: false,
-  },
-  fullConfig: {
-    title: "Full Configuration Demo",
-    startButtonText: "Start Recording",
-    stopButtonText: "Stop Recording",
-    submitButtonText: "Submit",
-    retryButtonText: "Try Again",
-    theme: "dark",
-    includeAudio: true,
-    includeVideo: true,
   },
   audioOnly: {
     title: "Voice Recording Only",
@@ -150,20 +141,6 @@ export const VideoOnly = createExtensionStory<ExtensionPayload>(
   options
 );
 
-export const FullConfiguration = createExtensionStory<ExtensionPayload>(
-  RecorderExtension,
-  extension_config,
-  recorders.fullConfig,
-  {
-    ...options,
-    containerStyles: {
-      ...options.containerStyles,
-      background: "#000000",
-      padding: "1rem",
-    },
-  }
-);
-
 export const AudioOnly = createExtensionStory<ExtensionPayload>(
   RecorderExtension,
   extension_config,
@@ -177,3 +154,8 @@ export const AudioOnly = createExtensionStory<ExtensionPayload>(
     },
   }
 );
+
+// Documentation story that shows the extension's description and prompt
+export const Prompts: StoryObj<typeof HTMLDivElement> = {
+  render: () => <ExtensionDocs extension={RecorderExtension} />,
+};

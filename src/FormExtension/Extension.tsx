@@ -12,7 +12,7 @@
  */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { extension_config } from "./config";
 import FormComponent from "./component/FormComponent.tsx";
 import styles from "./component/styles.css?inline";
@@ -25,7 +25,28 @@ const inputs = z.object({
     z.object({
       name: z.string(),
       type: z.enum([
-        "text","email","tel","number","password","textarea","radio","checkbox","select","date","time","datetime-local","month","week","range","color","file","hidden","image","reset","submit","button"
+        "text",
+        "email",
+        "tel",
+        "number",
+        "password",
+        "textarea",
+        "radio",
+        "checkbox",
+        "select",
+        "date",
+        "time",
+        "datetime-local",
+        "month",
+        "week",
+        "range",
+        "color",
+        "file",
+        "hidden",
+        "image",
+        "reset",
+        "submit",
+        "button",
       ]),
       label: z.string().optional(),
       placeholder: z.string().optional(),
@@ -47,7 +68,7 @@ export const FormExtension = createExtension({
   name: extension_config.reference_name,
   llmDescription: extension_config.description,
   inputs,
-  render: ({ data, element }) => {
+  render: ({ inputs, element }) => {
     // Create shadow root
     const shadow = element.attachShadow({ mode: "open" });
     const container = document.createElement("div");
@@ -57,7 +78,7 @@ export const FormExtension = createExtension({
     shadow.appendChild(styleElement);
     shadow.appendChild(container);
     const root = ReactDOM.createRoot(container);
-    root.render(<FormComponent {...data} />);
+    root.render(<FormComponent {...inputs} />);
     return () => {
       requestAnimationFrame(() => {
         root.unmount();

@@ -15,3 +15,5 @@ scribbler/
 dist
 .env
 storybook-static/
+scribbler.ts
+zoddy.ts

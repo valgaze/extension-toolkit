@@ -7,7 +7,7 @@
  * - Specifies data structures for extension props
  */
 
-import type { ExtensionConfig } from "../../util/types/extension.ts";
+import type { ExtensionConfig } from "../../util/types/extension";
 
 // 1️⃣ Extension Identity & Settings
 // Core configuration for extension registration
@@ -15,7 +15,17 @@ export const extension_config: ExtensionConfig = {
   id: "ext_react_form",
   reference_name: "MyExtension",
   supports_dark_mode: false,
-  description: "A form extension to capture user inputs",
+  description: `## Form Extension:
+<use_case>
+    Use this tool to create dynamic forms with various input types including text, email, number, 
+    checkboxes, radio buttons, and more. Supports custom validation and styling.
+</use_case>
+<important_notes>
+    1. Each field must have a unique name property
+    2. Required fields can be marked with the required property
+    3. Custom validation can be added using pattern, minLength, and maxLength properties
+    4. For select/radio/checkbox inputs, provide options array with possible values
+</important_notes>`,
 };
 
 // 2️⃣ Extension Props Interface

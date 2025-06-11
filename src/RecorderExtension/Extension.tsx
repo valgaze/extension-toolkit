@@ -12,21 +12,39 @@
  */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { extension_config } from "./config";
 import RecorderComponent from "./component/RecorderComponent";
 import styles from "./component/styles.css?inline";
 import { createExtension } from "../../util/extensions/index";
 
 const inputs = z.object({
-  title: z.string().optional(),
-  startButtonText: z.string().optional(),
-  stopButtonText: z.string().optional(),
-  submitButtonText: z.string().optional(),
-  retryButtonText: z.string().optional(),
-  theme: z.enum(["light", "dark"]).optional(),
-  includeAudio: z.boolean().optional(),
-  includeVideo: z.boolean().optional(),
+  title: z.string().optional().describe("The title of the recorder"),
+  startButtonText: z
+    .string()
+    .optional()
+    .describe("The text of the start button"),
+  stopButtonText: z.string().optional().describe("The text of the stop button"),
+  submitButtonText: z
+    .string()
+    .optional()
+    .describe("The text of the submit button"),
+  retryButtonText: z
+    .string()
+    .optional()
+    .describe("The text of the retry button"),
+  theme: z
+    .enum(["light", "dark"])
+    .optional()
+    .describe("The theme of the recorder"),
+  includeAudio: z
+    .boolean()
+    .optional()
+    .describe("Whether to include audio in the recorder"),
+  includeVideo: z
+    .boolean()
+    .optional()
+    .describe("Whether to include video in the recorder"),
 });
 
 export type ExtensionPayload = z.infer<typeof inputs>;
@@ -36,7 +54,7 @@ export const RecorderExtension = createExtension({
   name: extension_config.reference_name,
   llmDescription: extension_config.description,
   inputs,
-  render: ({ data, element }) => {
+  render: ({ inputs, element }) => {
     // Create shadow root
     const shadow = element.attachShadow({ mode: "open" });
     const container = document.createElement("div");
@@ -46,7 +64,7 @@ export const RecorderExtension = createExtension({
     shadow.appendChild(styleElement);
     shadow.appendChild(container);
     const root = ReactDOM.createRoot(container);
-    root.render(<RecorderComponent {...data} />);
+    root.render(<RecorderComponent {...inputs} />);
     return () => {
       requestAnimationFrame(() => {
         root.unmount();

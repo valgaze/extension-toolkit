@@ -5,7 +5,18 @@ export const extension_config: ExtensionConfig = {
   id: "ext_toast",
   reference_name: "ToastExtension",
   supports_dark_mode: true,
-  description: "A toast notification extension powered by Sonner",
+  description: `## Toast Notification Extension:
+<use_case>
+    Use this tool to display non-intrusive toast notifications to users. Supports various 
+    notification types including success, error, loading, and custom messages.
+</use_case>
+<important_notes>
+    1. Notifications can be positioned in different screen locations
+    2. Custom duration can be set for each notification
+    3. Supports dismissible notifications with close buttons
+    4. Custom styling can be applied to match your application's theme
+    5. Supports both light and dark themes
+</important_notes>`,
 };
 
 export type Position =

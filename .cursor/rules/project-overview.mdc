@@ -1,0 +1,34 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Extension Toolkit Project Overview
+
+This project is a toolkit for building interactive extensions with React and TypeScript. The main components are:
+
+## Core Structure
+- `src/` - Contains all extension implementations and core utilities
+- `util/` - Shared utilities and helper functions
+- `docs/` - Project documentation
+- `.storybook/` - Storybook configuration for component development
+
+## Key Extensions
+The project includes several pre-built extensions:
+- [StarRaterExtension](mdc:src/StarRaterExtension/Extension.tsx) - Interactive star rating component
+- [ToastExtension](mdc:src/ToastExtension) - Notification system
+- [FormExtension](mdc:src/FormExtension) - Form handling and validation
+- [VideoExtension](mdc:src/VideoExtension) - Video player functionality
+- [RecorderExtension](mdc:src/RecorderExtension) - Audio/video recording capabilities
+
+## Development Guidelines
+1. All extensions should be built using React and TypeScript
+2. Use Zod for input/output validation
+3. Follow the extension pattern established in existing components
+4. Include proper documentation and type definitions
+5. Implement proper error handling and loading states
+
+## Getting Started
+1. Check the [README.md](mdc:README.md) for setup instructions
+2. Review [when-to-use.md](mdc:when-to-use.md) for best practices
+3. Use Storybook for component development and testing

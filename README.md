@@ -95,7 +95,7 @@ This might take a few minutes to complete, so while you're waiting, let's get yo
 - If you don't have a Voiceflow account, create one here: **[https://creator.voiceflow.com/signup
   ](https://creator.voiceflow.com/signup)** and login
 
-- From your Voiceflow dashboard, find the import button in the top right corner and import the **[project file (assets/voiceflow_project_file.vf)](./assets/voiceflow_project_file.vf)** to get up and running quickly
+- From your Voiceflow dashboard, find the import button in the top right corner and import the **[project file (assets/voiceflow_project_file.vf)](./assets/voiceflow_project_file.vf)** to get up and running quickly or make your own from scratch
 
 - The import flow will look roughly like this:
 
@@ -107,9 +107,9 @@ This might take a few minutes to complete, so while you're waiting, let's get yo
 
 ![Voiceflow Workflow](./assets/workflow.png)
 
-- 🛠️ Note: Everytime you make a change to your voiceflow project when developing your extension, you'll need to "Run" the project to see the changes in the Voiceflow widget. Press it once to run the project and publish the 1st development version that we'll use in the next few steps
+- 🛠️ Note: Everytime you make a change to your voiceflow diagram when developing your extension, you'll need to tap the "Chat" button to push any changes in the Voiceflow widget and your extensions. Press it once to run the project and publish the 1st development version that we'll use in the next few steps. (When you're ready to lock it in, you can tap "Publish" to publish a production version of your agent)
 
-![Voiceflow Run](./assets/run.png)
+![Voiceflow Run](./assets/chat.png)
 
 ## 4) Grab your project ID
 
@@ -186,77 +186,226 @@ npm run build:extension
 
 - This will bundle your extension and output it to the `dist/` directory where you can import it into your Voiceflow widget
 
-If you want to see a fully working example, you can run the following command to build and serve the example
+## Extension Development Guide
 
-```sh
-npm run serve:example
+### Extension Types and Configuration
+
+There are two main types of extensions you can create:
+
+1. **Render Extensions** - Display content within the chat widget
+2. **Effect Extensions** - Perform actions outside the chat widget (like showing toasts, updating external UI)
+
+### Bridge API
+
+The `bridge` object provides type-safe methods to communicate between your extension and the Voiceflow canvas:
+
+Example usage:
+
+```typescript
+const MyExtension = createExtension({
+  // ... other config ...
+  outputs: z.object({
+    selectedOption: z.string(),
+  }),
+  render: ({ inputs, bridge }) => {
+    const handleSelect = (value: string) => {
+      try {
+        // Type-safe! TypeScript will error if data doesn't match outputs schema, optionally if $config.schema is set to true you will also get a runtime error
+        bridge.complete({ selectedOption: value });
+      } catch (err) {
+        // Error handling is built-in
+        bridge.error(err);
+      }
+    };
+
+    return <div>...</div>;
+  },
+});
 ```
 
-**IMPORTANT**: The files saved in the example-bundled will point to your PRODUCTION voiceflow project-- you'll need to click "publish" in the Voiceflow canvas to see the changes in the live widget to see updates for the production build
+Note: For convenience, there is also "escape valve" `bridge.sendRaw({type: 'path1', payload: {a:1,b:2}})` to send back custom values in extraordinary situations
 
-![Voiceflow Publish](./assets/publish.png)
+### Creating Extensions
 
-<details>
-<summary>🛠️ Note: If you want to build a CDN-compatible extension, you can run the following command</summary>
+Use the `createExtension` helper to build your extension:
+
+```typescript
+import { createExtension } from "./util/extensions";
+
+const MyExtension = createExtension({
+  // Required: Unique identifier used in Voiceflow canvas
+  id: "my_extension",
+
+  // Optional: Name shown in LLM-facing descriptions
+  name: "My Extension",
+
+  // Required: Description for LLM tooling
+  llmDescription: "A custom extension that does X",
+
+  // Required: Zod schema defining what data your extension needs
+  inputs: z.object({
+    title: z.string().default("Pick an optional below"),
+    options: z.array(z.string()),
+  }),
+
+  // Optional: Zod schema defining what data your extension returns
+  outputs: z.object({
+    selectedOption: z.string(),
+  }),
+
+  // Required: Your extension component
+  render: ({ inputs, bridge }) => {
+    const handleSelect = (value) => {
+      try {
+        bridge.complete({ selectedOption: value });
+      } catch (err) {
+        bridge.error(err);
+      }
+    };
+
+    return (
+      <div>
+        <p>{inputs.title}</p>
+        {inputs.options.map((option) => (
+          <button
+            key={option}
+            onClick={() => handleSelect(option)}
+            style={{ marginRight: "0.5rem" }}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+    );
+  },
+});
+```
+
+For effect extensions that don't render anything in the chat:
+
+```typescript
+import { createEffectExtension } from "./util/extensions";
+
+const ToastExtension = createEffectExtension({
+  id: "toast_extension",
+  name: "Toast Extension",
+  llmDescription: "Shows a toast notification outside the chat",
+
+  inputs: z.object({
+    message: z.string(),
+  }),
+
+  effect: ({ inputs }) => {
+    // Show toast outside chat widget
+    showToast(inputs.message);
+  },
+});
+```
+
+### Exporting Extensions
+
+Export your extensions in `src/index.tsx`:
+
+```typescript
+import { MyExtension } from "./src/MyExtension";
+import { ToastExtension } from "./src/ToastExtension";
+
+export default [MyExtension, ToastExtension];
+```
+
+Anything exported in index.tsx will be available in the final bundle generated to dist/
+
+### Configuration
+
+Extensions receive configuration through the `$config` object. This is passed from the Voiceflow diagram and always overrides defaults:
+
+| Property | Type                    | Default    | Description                                         |
+| -------- | ----------------------- | ---------- | --------------------------------------------------- |
+| `logs`   | boolean                 | true       | Show debug logs in the console                      |
+| `schema` | boolean                 | false      | Whether to validate inputs against the schema       |
+| `error`  | "console" \| "interact" | "interact" | How to handle errors (console logs or show in chat) |
+| `dark`   | boolean                 | false      | Whether to use dark mode styling                    |
+
+Example configuration in Voiceflow diagram:
+
+```javascript
+{
+  "$config": {
+      "logs": true,
+      "schema": true,
+      "error": "interact",
+      "dark": true
+  },
+  "message": "How did we do?"
+}
+```
+
+Note: $config lives on it own level, you can provide extension-specific inputs around it
+
+### Building Extensions
+
+#### Standard Build to dist/
+
+```sh
+npm run build:extension
+```
+
+For a full demonstration, run `npm run serve:example` to see a full integration in the **[example-bundled](./example-bundled/)** directory
+
+#### CDN Build to dist/
 
 ```sh
 npm run build:extension:cdn
 ```
 
-This will output a `bundled_cdn.js` file in the `example-bundled` directory and an index.html which consumes the.
+For a full demonstration, run `npm run serve:example:cdn` to see a full integration in the **[example-bundled](./example-bundled/)** directory
 
-In short, you have two ways to build and deploy your extension:
+### Using Zod Mini
 
-#### 1. Standard Build (`npm run build:extension`)
+For smaller bundle sizes with optimal treeshaking, you can try using [Zod-mini](https://zod.dev/packages/mini) in the extensions themselves:
 
-- Outputs a module-based bundle
-- Best for modern web applications
-- Supports tree-shaking and optimized imports
-- Use when you have control over the hosting environment
+```typescript
+import { z } from "zod/v4-mini";
 
-#### 2. CDN Build (`npm run build:extension:cdn`)
-
-- Creates a globally accessible bundle that works via CDN
-- Perfect for direct script inclusion in HTML
-- Makes your extension available through `window.VoiceflowExtensions`
-- Ideal when you need to:
-  - Host your extension on a CDN
-  - Include the extension directly in HTML via `<script>` tags
-  - Support legacy systems or simpler integration scenarios
-
-Example of using the CDN build:
-
-```html
-<!-- Load the extension(s) from your CDN -->
-<script src="https://your-cdn.com/voiceflow-extension.js"></script>
-
-<script type="module">
-  // Import the extension(s) off window.VoiceflowExtensions
-  const { FormExtension, VideoExtension } = window.VoiceflowExtensions;
-
-  // Initialize Voiceflow Chat Widget
-  // See documentation for deets: https://docs.voiceflow.com/docs/embed-customize-styling#customization-and-configuration
-  (function (d, t) {
-    var v = d.createElement(t),
-      s = d.getElementsByTagName(t)[0];
-    v.onload = function () {
-      window.voiceflow.chat.load({
-        verify: { projectID: "project_id_here" },
-        url: "https://general-runtime.voiceflow.com",
-        versionID: "production", // If 'production' you must click  PUBLISH on canvas to get updates, if development you need to press the Run button
-        assistant: {
-          extensions: [FormExtension, VideoExtension],
-        },
-      });
-    };
-    v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
-    v.type = "text/javascript";
-    s.parentNode.insertBefore(v, s);
-  })(document, "script");
-</script>
+const MyExtension = createExtension({
+  id: "my_extension",
+  llmDescription: "My extension",
+  // Note slightly different syntax for zod-mini
+  inputs: z.object({
+    description: z.optional(z.string()),
+    index: z.number().check(z.minimum(5), z.maximum(10)),
+    specialString: z.optional(
+      z.string().check(z.startsWith("special-"), z.maxLength(12))
+    ),
+  }),
+  render: ({ inputs, bridge }) => {
+    // Your component logic
+  },
+});
 ```
 
-</details>
+### Extension Lifecycle
+
+1. **Input Validation**
+
+   - Extension receives data from Voiceflow diagram
+   - Zod schema validates the input if `schema: true`
+   - If validation fails, error handling follows `error` config
+
+2. **Rendering/Effect**
+
+   - For render extensions: Component is mounted in chat
+   - For effect extensions: Effect function runs once
+
+3. **Data Collection (Optional)**
+
+   - If `outputs` schema is defined, extension can collect data
+   - Call `bridge.complete(data)` to send data back to Voiceflow
+   - Set "Stop on Action" in Voiceflow diagram to wait for data
+
+4. **Cleanup**
+   - Render extensions: Component is unmounted when done
+   - Effect extensions: No cleanup needed
 
 ## Development Workflow
 
@@ -311,7 +460,10 @@ Below is an example of a custom action node in Voiceflow that uses the extension
 
 ![Voiceflow Custom Action](./assets/create_action.gif)
 
-**Stop on Action:** When creating an action you can tap the toggle if you want your conversation diagram to "wait" for the extension to send something back before continuing the conversation
+**Stop on Action:** This toggle determines if your conversation should wait for user input before continuing. Here's when to use it:
+
+- For extensions that collect user data (like forms, seat pickers, or surveys), enable "Stop on Action" and use `bridge.complete()` to send the data back to Voiceflow
+- For extensions that just display content (like videos, images, or toasts) without needing user input, leave "Stop on Action" disabled
 
 Add the extension to **[index.tsx](./src/index.tsx)**
 
@@ -343,3 +495,74 @@ Armed with this toolkit, you're ready to create powerful, production-ready Voice
 ## License
 
 MIT
+
+## Extension Description & Prompt Generation
+
+The toolkit provides utility functions to generate descriptions and prompts for your extensions, which can be useful for LLM integration or documentation.
+
+### `describeExtension`
+
+This function generates a detailed description of an extension, including its name, LLM description, inputs, and outputs.
+
+```typescript
+import { describeExtension } from "./util/extensions/describe";
+
+const description = describeExtension(MyExtension);
+console.log(description);
+```
+
+### `generateExtensionPrompt`
+
+Generates a formatted prompt for a single extension, suitable for use with LLMs.
+
+```typescript
+import { generateExtensionPrompt } from "./util/extensions/describe";
+
+const prompt = generateExtensionPrompt(MyExtension);
+console.log(prompt);
+```
+
+### `generateExtensionsPrompt`
+
+Generates a single prompt for multiple extensions, separated by '---'.
+
+```typescript
+import { generateExtensionsPrompt } from "./util/extensions/describe";
+
+const prompt = generateExtensionsPrompt([MyExtension, AnotherExtension]);
+console.log(prompt);
+```
+
+### Example Usage in Agent Step
+
+You can generate a prompt for your extensions and pass it to the Voiceflow agent as part of the launch event:
+
+```javascript
+<script type="module">
+import { generateExtensionsPrompt } from './util/extensions/describe';
+import { RecorderExtension, StarRaterExtension } from './bundled.js';
+
+const extensions = [RecorderExtension, StarRaterExtension];
+
+window.voiceflow.chat.load({
+    assistant: {
+        extensions: extensions
+    },
+    verify: {
+        projectID: 'YOUR_PROJECT_ID'
+    },
+    url: 'https://general-runtime.voiceflow.com',
+    versionID: 'production',
+    launch: {
+        event: {
+            type: 'launch',
+            payload: {
+                EXTENSIONS_PROMPT: generateExtensionsPrompt(extensions)
+            }
+        }
+    }
+});
+</script>
+```
+
+This allows you to dynamically provide extension information to your Voiceflow agent at runtime.
